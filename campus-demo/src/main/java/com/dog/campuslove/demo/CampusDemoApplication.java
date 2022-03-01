@@ -1,13 +1,12 @@
-package com.dog.campuslove;
+package com.dog.campuslove.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CampusLoveApplication {
+public class CampusDemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CampusLoveApplication.class, args);
+        SpringApplication.run(CampusDemoApplication.class, args);
     }
-
 }
