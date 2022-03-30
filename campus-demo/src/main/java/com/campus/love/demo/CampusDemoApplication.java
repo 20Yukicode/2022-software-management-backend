@@ -1,4 +1,4 @@
-package com.campuslove.demo;
+package com.campus.love.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

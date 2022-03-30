@@ -12,11 +12,13 @@
         <version>2.4.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.dog</groupId>
+
+    <groupId>com.campus.love</groupId>
     <artifactId>campus-love</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>campus-love</name>
     <description>campus-love</description>
+
     <properties>
         <java.version>11</java.version>
         <spring-cloud.version>2020.0.1</spring-cloud.version>
