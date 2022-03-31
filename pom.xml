@@ -4,8 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>campus-love-demo</module>
-        <module>campus-love-common</module>
+        <module>flipped-demo</module>
+        <module>flipped-common</module>
+        <module>flipped-gateway</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -15,8 +16,9 @@
     </parent>
 
     <groupId>com.campus.love</groupId>
-    <artifactId>campus-love</artifactId>
+    <artifactId>flipped</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
     <name>campus-love</name>
     <description>campus-love</description>
 
