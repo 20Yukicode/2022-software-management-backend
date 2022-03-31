@@ -1,6 +1,6 @@
-package com.campus.love.common.exception;
+package com.campus.love.common.core.exception;
 
-import com.campus.love.common.api.MessageModel;
+import com.campus.love.common.core.api.MessageModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;

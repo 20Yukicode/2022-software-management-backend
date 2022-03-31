@@ -1,4 +1,4 @@
-package com.campus.love.common.api;
+package com.campus.love.common.core.api;
 
 public interface IErrorCode {
     long getCode();

@@ -1,4 +1,4 @@
-package com.campus.love.common.domain;
+package com.campus.love.common.core.domain;
 
 import lombok.Builder;
 import lombok.Data;

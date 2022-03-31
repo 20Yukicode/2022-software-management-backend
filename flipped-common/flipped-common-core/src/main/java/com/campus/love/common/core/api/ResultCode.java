@@ -1,4 +1,4 @@
-package com.campus.love.common.api;
+package com.campus.love.common.core.api;
 
 public enum ResultCode implements IErrorCode {
     SUCCESS(200, "操作成功"),

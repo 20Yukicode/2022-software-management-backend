@@ -1,7 +1,7 @@
-package com.campus.love.common.util;
+package com.campus.love.common.core.util;
 
-import com.campus.love.common.api.IErrorCode;
-import com.campus.love.common.exception.ApiException;
+import com.campus.love.common.core.api.IErrorCode;
+import com.campus.love.common.core.exception.ApiException;
 
 public class AssertUtil {
 

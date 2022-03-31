@@ -1,6 +1,6 @@
-package com.campus.love.common.config;
+package com.campus.love.common.core.config;
 
-import com.campus.love.common.domain.SwaggerProperties;
+import com.campus.love.common.core.domain.SwaggerProperties;
 import org.springframework.context.annotation.Bean;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;

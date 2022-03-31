@@ -3,11 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <modules>
-        <module>flipped-demo</module>
-        <module>flipped-common</module>
-        <module>flipped-gateway</module>
-    </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -18,9 +13,18 @@
     <groupId>com.campus.love</groupId>
     <artifactId>flipped</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
-    <name>campus-love</name>
+    <name>flipped</name>
     <description>campus-love</description>
+
+    <modules>
+        <module>flipped-demo</module>
+        <module>flipped-gateway</module>
+        <module>flipped-common</module>
+        <module>flipped-message</module>
+        <module>flipped-tweet</module>
+        <module>flipped-user</module>
+        <module>flipped-match</module>
+    </modules>
 
     <properties>
         <java.version>11</java.version>
@@ -61,6 +65,12 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.campus.love</groupId>
+            <artifactId>flipped-common-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

@@ -1,11 +1,10 @@
-package com.campus.love.common.log;
+package com.campus.love.common.core.log;
 
 import com.alibaba.fastjson.JSON;
-import com.campus.love.common.domain.WebLog;
-import com.campus.love.common.util.HttpUtil;
+import com.campus.love.common.core.domain.WebLog;
+import com.campus.love.common.core.util.HttpUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;

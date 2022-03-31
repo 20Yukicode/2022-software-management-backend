@@ -1,8 +1,12 @@
-package com.campus.love.common.api;
+package com.campus.love.common.core.api;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
-public class MessageModel<T> {
+import java.io.Serializable;
+
+@Data
+public class MessageModel<T> implements Serializable {
 
     @ApiModelProperty("状态码")
     private long code;

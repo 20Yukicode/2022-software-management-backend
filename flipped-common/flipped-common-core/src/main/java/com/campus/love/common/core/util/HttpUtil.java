@@ -1,4 +1,4 @@
-package com.campus.love.common.util;
+package com.campus.love.common.core.util;
 
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;

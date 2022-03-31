@@ -1,6 +1,6 @@
-package com.campus.love.common.exception;
+package com.campus.love.common.core.exception;
 
-import com.campus.love.common.api.IErrorCode;
+import com.campus.love.common.core.api.IErrorCode;
 
 public class ApiException extends RuntimeException{
 
