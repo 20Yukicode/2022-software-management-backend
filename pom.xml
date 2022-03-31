@@ -5,6 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>campus-love-demo</module>
+        <module>campus-love-common</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -26,6 +27,8 @@
         <spring-boot-admin.version>2.2.3</spring-boot-admin.version>
         <mysql-connector-java.version>8.0.26</mysql-connector-java.version>
         <fastjson.version>1.2.79</fastjson.version>
+        <knife4j.version>3.0.3</knife4j.version>
+        <knife4j-micro.version>2.0.9</knife4j-micro.version>
     </properties>
 
     <dependencies>
@@ -52,6 +55,12 @@
             <artifactId>spring-boot-admin-starter-client</artifactId>
             <version>${spring-boot-admin.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -84,11 +93,17 @@
                 <version>${mysql-connector-java.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <!--fastjson -->
+            <!--knife4j-cloud-->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-micro-spring-boot-starter</artifactId>
+                <version>${knife4j-micro.version}</version>
+            </dependency>
+            <!--knife4j-->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
             </dependency>
 
         </dependencies>
