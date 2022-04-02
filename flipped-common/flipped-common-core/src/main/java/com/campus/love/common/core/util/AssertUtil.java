@@ -5,11 +5,11 @@ import com.campus.love.common.core.exception.ApiException;
 
 public class AssertUtil {
 
-    public void failed(String message) {
+    public static void failed(String message) {
         throw new ApiException(message);
     }
 
-    public void failed(IErrorCode error) {
+    public static void failed(IErrorCode error) {
         throw new ApiException(error);
     }
 }

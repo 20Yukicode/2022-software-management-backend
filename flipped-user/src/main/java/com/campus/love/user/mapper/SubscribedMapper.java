@@ -1,6 +1,8 @@
 package com.campus.love.user.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.campus.love.user.entity.Subscribed;
+import org.springframework.stereotype.Repository;
 
 /**
 * @author 86180
@@ -8,7 +10,8 @@ import com.campus.love.user.entity.Subscribed;
 * @createDate 2022-04-02 17:44:14
 * @Entity com.campus.love.user.entity.Subscribed
 */
-public interface SubscribedMapper {
+@Repository
+public interface SubscribedMapper extends BaseMapper<Subscribed> {
 
 }
 

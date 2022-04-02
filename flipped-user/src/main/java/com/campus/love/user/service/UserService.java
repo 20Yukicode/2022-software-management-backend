@@ -8,5 +8,11 @@ import java.util.List;
 @Service
 public interface UserService {
 
-    public List<User> getAllUsers();
+    List<User> getAllUsers();
+
+    User getOneById(Integer id);
+
+    List<String> getSubscribedById(Integer id);
+
+
 }

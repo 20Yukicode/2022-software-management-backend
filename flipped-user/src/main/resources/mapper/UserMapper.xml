@@ -32,4 +32,10 @@
         description,blacklist,photo_album,
         create_time,update_time
     </sql>
+    <select id="getSubscribedById" resultType="String">
+        select user.nickname
+        from user left join subscribed
+        on user.id=subscribed.first_userid
+        where user.id=#{userId}
+    </select>
 </mapper>

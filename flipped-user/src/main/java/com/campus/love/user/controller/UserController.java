@@ -1,27 +1,37 @@
 package com.campus.love.user.controller;
 
 import com.campus.love.common.core.api.MessageModel;
+import com.campus.love.user.entity.Subscribed;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.service.UserService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
-    private final UserService userServiceImpl;
+    private final UserService userService;
 
     public UserController(UserService userService){
-        this.userServiceImpl=userService;
+        this.userService =userService;
     }
 
     @RequestMapping(value = "/all",method = RequestMethod.GET)
     public MessageModel<List<User>> queryAllUsers(){
 
-        return MessageModel.success(userServiceImpl.getAllUsers());
+        return MessageModel.success(userService.getAllUsers());
+    }
+
+    @GetMapping("/userId/{id}")
+    public MessageModel<User> queryById(@PathVariable Integer id){
+
+        return MessageModel.success(userService.getOneById(id));
+    }
+
+    @GetMapping("/subscribed/userId/{id}")
+    public MessageModel<List<String>> querySubscribedById(@PathVariable Integer id) {
+
+        return MessageModel.success(userService.getSubscribedById(id));
     }
 }
