@@ -39,7 +39,7 @@ public class LogAspect {
         Method method = currentMethod(point);
         Object[] args = point.getArgs();
 
-        WebLog build = WebLog.builder()
+        WebLog webLog = WebLog.builder()
                 .startTime(startTime)
                 .spendTime(endTime-startTime)
                 .parameter(getParameters(method,args))
@@ -50,7 +50,7 @@ public class LogAspect {
                 .result(proceed)
                 .build();
         //后续要转为ELK
-        log.info(JSON.toJSONString(build));
+        log.info("日志记录"+JSON.toJSONString(webLog));
         return proceed;
     }
 

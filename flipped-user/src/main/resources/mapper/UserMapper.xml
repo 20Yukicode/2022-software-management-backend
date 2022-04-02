@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.love.user.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.campus.love.user.entity.User">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="gender" column="gender" jdbcType="VARCHAR"/>
+            <result property="state" column="state" jdbcType="INTEGER"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="hometown" column="hometown" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+            <result property="degree" column="degree" jdbcType="VARCHAR"/>
+            <result property="major" column="major" jdbcType="VARCHAR"/>
+            <result property="height" column="height" jdbcType="DECIMAL"/>
+            <result property="weight" column="weight" jdbcType="DECIMAL"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="blacklist" column="blacklist" jdbcType="VARCHAR"/>
+            <result property="photoAlbum" column="photo_album" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,password,gender,
+        state,address,hometown,
+        phone,avatar,degree,
+        major,height,weight,
+        description,blacklist,photo_album,
+        create_time,update_time
+    </sql>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.love.tweet.mapper.TopicMapper">
+
+    <resultMap id="BaseResultMap" type="com.campus.love.tweet.entity.Topic">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="heading" column="heading" jdbcType="VARCHAR"/>
+            <result property="participants" column="participants" jdbcType="VARCHAR"/>
+            <result property="tweetNum" column="tweet_num" jdbcType="INTEGER"/>
+            <result property="introduction" column="introduction" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,heading,participants,
+        tweet_num,introduction,create_time,
+        update_time
+    </sql>
+</mapper>

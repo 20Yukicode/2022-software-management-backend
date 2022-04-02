@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.love.tweet.mapper.ReportMapper">
+
+    <resultMap id="BaseResultMap" type="com.campus.love.tweet.entity.Report">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="violateType" column="violate_type" jdbcType="VARCHAR"/>
+            <result property="reportedId" column="reported_id" jdbcType="INTEGER"/>
+            <result property="reportedType" column="reported_type" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,content,violate_type,
+        reported_id,reported_type,create_time,
+        update_time
+    </sql>
+</mapper>

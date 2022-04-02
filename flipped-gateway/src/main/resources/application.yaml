@@ -1,0 +1,58 @@
+server:
+  port: 10010
+
+spring:
+  cloud:
+    gateway:
+      routes:
+#        - id: flipped-demo #路由唯一标识
+#          uri: lb://flipped-demo  #路由目标地址
+#          predicates:
+#            - Path=/api/flipped-demo/**
+#          filters:
+#             - StripPrefix=2
+        - id: flipped-user
+          uri: lb://flipped-user
+          predicates:
+            - Path=/api/flipped-user/**
+          filters:
+            - StripPrefix=2
+        - id: flipped-message
+          uri: lb://flipped-message
+          predicates:
+            - Path=/api/flipped-message/**
+          filters:
+            - StripPrefix=2
+        - id: flipped-tweet
+          uri: lb://flipped-tweet
+          predicates:
+            - Path=/api/flipped-tweet/**
+          filters:
+            - StripPrefix=2
+        - id: flipped-match
+          uri: lb://flipped-match
+          predicates:
+            - Path=/api/cloud-flipped/**
+          filters:
+            - StripPrefix=2
+      default-filters:
+        - AddRequestHeader=TRuth,ww like nzh
+        - AddRequestHeader=gateway,gateway
+      globalcors:
+        add-to-simple-url-handler-mapping: true #解决options请求拦截问题
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              #配置跨域访问url ,可以是数组也可以是一个数组里面放url
+              #- "http://localhost:8081"
+              - "*"
+            allowedMethods:
+              - "GET"
+              - "PUT"
+              - "POST"
+              - "DELETE"
+              - "OPTIONS"
+            allowedHeaders: "*"
+            allowedCredentials: true #是否允许带cookie
+            maxAge: 3600 #此次跨域检测有效期
+

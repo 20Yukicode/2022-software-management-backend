@@ -30,11 +30,15 @@
         <java.version>11</java.version>
         <spring-cloud.version>2020.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
-        <spring-boot-admin.version>2.2.3</spring-boot-admin.version>
+        <spring-boot-admin.version>2.6.3</spring-boot-admin.version>
         <mysql-connector-java.version>8.0.26</mysql-connector-java.version>
-        <fastjson.version>1.2.79</fastjson.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <druid.version>1.2.8</druid.version>
+        <fastjson.version>1.2.80</fastjson.version>
         <knife4j.version>3.0.3</knife4j.version>
         <knife4j-micro.version>2.0.9</knife4j-micro.version>
+        <sa-token.version>1.28.0</sa-token.version>
+        <minio.version>8.2.1</minio.version>
     </properties>
 
     <dependencies>
@@ -42,41 +46,58 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>
             <version>${spring-boot-admin.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
 
+        <!--spring-cloud-dependencies 2020.0.0 版本不再默认加载bootstrap 文件，
+        如果需要加载bootstrap 文件需要手动添加依赖。-->
         <dependency>
-            <groupId>com.campus.love</groupId>
-            <artifactId>flipped-common-core</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+
+        <!-- 因为高版本不用ribbon了，所以需要加上这个，不然gateway和feign都用不了-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
         </dependency>
     </dependencies>
 
@@ -98,6 +119,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!--common-core-->
+            <dependency>
+                <groupId>com.campus.love</groupId>
+                <artifactId>flipped-common-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!--mysql-->
             <dependency>
                 <groupId>mysql</groupId>
@@ -105,6 +134,20 @@
                 <version>${mysql-connector-java.version}</version>
                 <scope>runtime</scope>
             </dependency>
+
+            <!--MyBatis Plus-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!--druid连接池-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
             <!--knife4j-cloud-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
@@ -118,6 +161,20 @@
                 <version>${knife4j.version}</version>
             </dependency>
 
+<!--            &lt;!&ndash;sa-token&ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>cn.dev33</groupId>-->
+<!--                <artifactId>sa-token-spring-boot-starter</artifactId>-->
+<!--                <version>${sa-token.version}</version>-->
+<!--            </dependency>-->
+
+            <!--minio-->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -127,6 +184,58 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>@</delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
+
+    <profiles>
+        <!--使用 mvn clean package -Pprod 进行激活prod环境的配置，否则激活默认环境-->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <profiles.active>dev</profiles.active>
+                <nacos.address>139.224.65.105:8848</nacos.address>
+                <nacos.namespace>dev</nacos.namespace>
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+                <nacos.address>139.224.65.105:8848</nacos.address>
+                <nacos.namespace>test</nacos.namespace>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+                <nacos.address>139.224.65.105:8848</nacos.address>
+                <nacos.namespace>prod</nacos.namespace>
+            </properties>
+        </profile>
+    </profiles>
 </project>

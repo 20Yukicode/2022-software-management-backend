@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: @nacos.address@
+      discovery:
+        namespace: @nacos.namespace@
+        cluster-name: SH
+      config:
+        namespace: @nacos.namespace@
+        file-extension: yaml
+

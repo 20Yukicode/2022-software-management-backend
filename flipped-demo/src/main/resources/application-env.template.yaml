@@ -1,0 +1,10 @@
+server:
+  port: 9050
+
+spring:
+  datasource:
+    username: yours username
+    password: yours password
+    url: yours url
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
