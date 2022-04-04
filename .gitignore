@@ -32,5 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
+### env-resources ###
 application-*.yaml
 !application-env.template.yaml
+
+### Test Class ###
+/**/test/java/

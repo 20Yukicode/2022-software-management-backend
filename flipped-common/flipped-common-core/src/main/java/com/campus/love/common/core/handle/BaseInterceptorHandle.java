@@ -4,7 +4,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 public abstract class BaseInterceptorHandle implements WebMvcConfigurer {
 
@@ -15,13 +14,16 @@ public abstract class BaseInterceptorHandle implements WebMvcConfigurer {
      * 所以白名单要修改
      * @return
      */
-    public abstract List<String> whiteList();
 
+    public abstract void moduleInterceptor(InterceptorRegistry registry);
+
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        List<String> whiteList = whiteList();
-        registry.addInterceptor(gatewayInterceptor)
+        registry.addInterceptor(gatewayInterceptor);
                 //.addPathPatterns("/**")
-                .excludePathPatterns(whiteList);
+
+        moduleInterceptor(registry);
+
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

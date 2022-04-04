@@ -2,18 +2,19 @@ package com.campus.love.common.core.exception;
 
 import com.campus.love.common.core.api.MessageModel;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
+@RestControllerAdvice
 @Slf4j
 public class ExceptionAspect {
 
@@ -57,6 +58,12 @@ public class ExceptionAspect {
                     .orElseGet(MessageModel::validateFailed);
         }
         return model;
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public MessageModel<Object> sqlException(SQLException e) {
+        log.warn("sql异常" + e.getMessage());
+        return MessageModel.failed(e.getMessage());
     }
 
 }
