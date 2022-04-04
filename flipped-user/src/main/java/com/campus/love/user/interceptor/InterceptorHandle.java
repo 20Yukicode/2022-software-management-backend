@@ -25,9 +25,11 @@ public class InterceptorHandle extends BaseInterceptorHandle {
 
     @Override
     public void moduleInterceptor(InterceptorRegistry registry) {
-        HandlerInterceptor interceptor = new ModuleInterceptor();
-        registry.addInterceptor(interceptor)
-                .excludePathPatterns("/login");
+        if(isIntercept) {
+            HandlerInterceptor interceptor = new ModuleInterceptor();
+            registry.addInterceptor(interceptor)
+                    .excludePathPatterns("/login");
+        }
     }
 
     @Component
