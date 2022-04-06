@@ -8,11 +8,19 @@ import java.util.List;
 @Service
 public interface UserService {
 
+    String login(Integer userId,String password);
+
+    void logout(Integer userId);
+
+    User insertUser(User user);
+
     List<User> getAllUsers();
 
     User getOneById(Integer id);
 
     List<String> getSubscribedById(Integer id);
+
+
 
 
 }

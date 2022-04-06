@@ -12,34 +12,34 @@ import lombok.Data;
 
 /**
  * 
- * @TableName notice
+ * @TableName chat_record
  */
-@TableName(value ="notice")
+@TableName(value ="chat_record")
 @Data
-public class Notice extends BaseEntity {
+public class ChatRecord extends BaseEntity {
     /**
-     * Id
+     * 聊天记录Id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 消息Id
+     * firstUser
      */
-    private Integer messageId;
+    private Integer sendUserId;
 
     /**
-     * 用户Id
+     * secondUser
      */
-    private Integer userId;
+    private Integer receiveUserId;
 
     /**
-     * 0-关注，1-点赞，2-评论，3-系统通知
+     * 聊天内容
      */
-    private Integer messageType;
+    private String content;
 
     /**
-     * 是否被阅读（0-读过，1-没读过）
+     * 0-未读，1-已读
      */
     private Integer isRead;
 

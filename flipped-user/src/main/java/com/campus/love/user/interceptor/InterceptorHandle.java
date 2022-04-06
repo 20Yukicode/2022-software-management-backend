@@ -20,29 +20,21 @@ import javax.servlet.http.HttpServletResponse;
 @RefreshScope
 public class InterceptorHandle extends BaseInterceptorHandle {
 
-    @Value("${module.isIntercept}")
-    private boolean isIntercept;
-
     @Override
     public void moduleInterceptor(InterceptorRegistry registry) {
-        if(isIntercept) {
-            HandlerInterceptor interceptor = new ModuleInterceptor();
-            registry.addInterceptor(interceptor)
-                    .excludePathPatterns("/login");
-        }
+        HandlerInterceptor interceptor = new ModuleInterceptor();
+        registry.addInterceptor(interceptor)
+                .excludePathPatterns("/login", "/all");
     }
 
     @Component
     private static class ModuleInterceptor implements HandlerInterceptor{
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-            String auth = request.getHeader("Auth");
-            log.info(request.getRequestURL().toString());
-            Object id = StpUtil.getLoginIdByToken(auth);
-            log.info("userId:" + id);
-            if (id != null) {
+            try {
+                StpUtil.checkLogin();
                 return true;
-            } else {
+            } catch (Exception e) {
                 InterceptorUtil.setReturn(response, ResultCode.UNAUTHORIZED);
                 return false;
             }
