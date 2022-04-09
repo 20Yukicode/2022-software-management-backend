@@ -7,8 +7,8 @@
     <resultMap id="BaseResultMap" type="com.campus.love.user.entity.Subscribed">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="isSubscribed" column="is_subscribed" jdbcType="INTEGER"/>
-            <result property="firstUserid" column="first_userid" jdbcType="INTEGER"/>
-            <result property="secondUserid" column="second_userid" jdbcType="INTEGER"/>
+            <result property="firstUserid" column="first_user_id" jdbcType="INTEGER"/>
+            <result property="secondUserid" column="second_user_id" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">

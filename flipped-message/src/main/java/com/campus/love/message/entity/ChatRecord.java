@@ -24,12 +24,12 @@ public class ChatRecord extends BaseEntity {
     private Integer id;
 
     /**
-     * firstUser
+     * 发送者Id
      */
     private Integer sendUserId;
 
     /**
-     * secondUser
+     * 接收者Id
      */
     private Integer receiveUserId;
 

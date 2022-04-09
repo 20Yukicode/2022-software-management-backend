@@ -29,7 +29,7 @@ public class Notice extends BaseEntity {
     private Integer messageId;
 
     /**
-     * 用户Id
+     * 接收消息用户Id
      */
     private Integer userId;
 
