@@ -1,18 +1,18 @@
 package com.campus.love.message.service;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.love.message.entity.ChatRecord;
-
-import java.util.List;
 
 
 public interface ChatService {
 
-    List<ChatRecord> getChatRecord(Integer sendUserId, Integer receiveUserId);
+    Page<ChatRecord> getChatRecord(Integer aUserId, Integer bUserId, Integer pageNum, Integer pageSize);
 
-    default void insertChatRecord(Integer sendUserId, Integer receiveUserId,ChatRecord oneChatRecord){}
+    void insertChatRecord(ChatRecord oneChatRecord);
 
-    default void insertChatRecord(ChatRecord oneChatRecord){}
+    void deleteChatRecord(Integer charRecordId);
 
-    default void chatRecordIsRead(Integer chatRecordId){}
+    void chatRecordIsRead(Integer chatRecordId);
+
 }

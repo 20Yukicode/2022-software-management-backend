@@ -2,8 +2,10 @@ package com.campus.love.message;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = "com.campus.love")
+@EnableFeignClients(basePackages = "com.campus.love.common.feign")
 public class MessageServiceApplication {
 
     public static void main(String[] args) {
