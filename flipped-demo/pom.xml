@@ -52,6 +52,10 @@
             <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.campus.love</groupId>
+            <artifactId>flipped-common-feign</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

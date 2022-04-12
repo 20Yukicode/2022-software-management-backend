@@ -1,4 +1,4 @@
-package com.campus.love.message.interceptor;
+package com.campus.love.demo.interceptor;
 
 import com.campus.love.common.core.domain.EnableProperties;
 import com.campus.love.common.core.handle.BaseInterceptorHandle;

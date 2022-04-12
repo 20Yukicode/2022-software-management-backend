@@ -7,6 +7,7 @@ import com.campus.love.common.feign.tweet.dto.LikesDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -17,12 +18,12 @@ import java.util.List;
 public interface TweetFeignClient {
 
     @ApiOperation("获取点赞用户列表")
-    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX+"/likes")
-    MessageModel<List<LikesDto>> queryLikes(Integer userId);
+    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX+"/likes/{userId}")
+    MessageModel<List<LikesDto>> queryLikes(@PathVariable Integer userId);
 
 
     @ApiOperation("获取评论用户列表")
-    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX+"/comment")
-    MessageModel<List<CommentDto>> queryComments(Integer userId);
+    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX+"/comment/{userId}")
+    MessageModel<List<CommentDto>> queryComments(@PathVariable Integer userId);
 
 }

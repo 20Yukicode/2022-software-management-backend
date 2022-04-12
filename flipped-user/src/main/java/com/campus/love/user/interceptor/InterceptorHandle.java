@@ -2,6 +2,7 @@ package com.campus.love.user.interceptor;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.campus.love.common.core.api.ResultCode;
+import com.campus.love.common.core.domain.EnableProperties;
 import com.campus.love.common.core.handle.BaseInterceptorHandle;
 import com.campus.love.common.core.util.InterceptorUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RefreshScope
 public class InterceptorHandle extends BaseInterceptorHandle {
+
+    @Override
+    public EnableProperties enableProperties() {
+        return null;
+    }
 
     @Override
     public void moduleInterceptor(InterceptorRegistry registry) {
