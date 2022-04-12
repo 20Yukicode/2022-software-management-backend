@@ -35,20 +35,31 @@ public class AssertUtil {
         }
     }
 
-    /**
-     * 判断是否为空
-     *
-     * @param obj
-     * @param message
-     */
-    public static void isNull(Object obj, String message) {
-        if (obj == null) {
+    public static void ifNull(Object obj, String message) {
+        if(obj==null){
             Optional.ofNullable(message)
                     .ifPresentOrElse(
                             m -> AssertUtil.failed(ResultCode.VALIDATE_FAILED.getCode(), m),
                             () -> AssertUtil.failed(ResultCode.VALIDATE_FAILED)
                     );
         }
+    }
+    /**
+     * 判断是否为空
+     *
+     * @param obj
+     * @param message
+     */
+    private static void isNull(Object obj, String message) {
+        Optional.ofNullable(obj)
+                .ifPresentOrElse(
+                        (o) -> AssertUtil.failed(message),
+                        () -> Optional.ofNullable(message)
+                                .ifPresentOrElse(
+                                        m -> AssertUtil.failed(ResultCode.VALIDATE_FAILED.getCode(), m),
+                                        () -> AssertUtil.failed(ResultCode.VALIDATE_FAILED)
+                                )
+                );
     }
 
     /**
@@ -58,6 +69,11 @@ public class AssertUtil {
      */
     public static void isNull(Object obj) {
         isNull(obj, null);
+    }
+
+
+    public static void isNull(String message){
+        isNull(null,message);
     }
 
 

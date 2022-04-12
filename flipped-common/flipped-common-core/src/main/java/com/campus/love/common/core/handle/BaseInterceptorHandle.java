@@ -15,7 +15,7 @@ public abstract class BaseInterceptorHandle implements WebMvcConfigurer {
      * @return
      */
 
-    public abstract void moduleInterceptor(InterceptorRegistry registry);
+    public void moduleInterceptor(InterceptorRegistry registry){}
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

@@ -16,4 +16,11 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.campus.love</groupId>
+            <artifactId>flipped-common-core</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

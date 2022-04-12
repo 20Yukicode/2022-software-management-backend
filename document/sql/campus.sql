@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for char_record
 -- ----------------------------
-DROP TABLE IF EXISTS `char_record`;
+DROP TABLE IF EXISTS chat_record;
 CREATE TABLE `char_record`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '聊天记录Id',
   `send_user_id` int NULL DEFAULT NULL COMMENT '发送者Id',
