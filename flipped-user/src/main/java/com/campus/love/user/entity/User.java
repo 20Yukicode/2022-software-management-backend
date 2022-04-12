@@ -29,9 +29,9 @@ public class User extends BaseEntity {
     private String nickname;
 
     /**
-     * 密码
+     * 统一身份认证uid
      */
-    private String password;
+    private String uid;
 
     /**
      * 性别

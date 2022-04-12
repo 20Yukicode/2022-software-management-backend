@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.campus.love.user.entity.User">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="uid" column="uid" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="VARCHAR"/>
             <result property="state" column="state" jdbcType="INTEGER"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
@@ -35,7 +35,7 @@
     <select id="getSubscribedById" resultType="String">
         select user.nickname
         from user left join subscribed
-        on user.id=subscribed.first_userid
+        on user.id=subscribed.first_user_id
         where user.id=#{userId}
     </select>
 </mapper>
