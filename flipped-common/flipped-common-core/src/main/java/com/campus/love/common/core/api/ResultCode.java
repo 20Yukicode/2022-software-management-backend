@@ -9,7 +9,9 @@ public enum ResultCode implements IErrorCode {
 
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
 
-    FORBIDDEN(403, "没有相关权限");
+    FORBIDDEN(403, "没有相关权限"),
+
+    FEIGN_FAILED(405,"远程调用失败");
 
 //    TEST_FAILED(1000,"测试失败"),
 //

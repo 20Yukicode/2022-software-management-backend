@@ -1,6 +1,7 @@
 package com.campus.love.common.core.exception;
 
 import com.campus.love.common.core.api.MessageModel;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -18,10 +19,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ExceptionAspect {
 
+    /**
+     * 业务异常apiException
+     * @param e
+     * @return
+     */
     @ExceptionHandler(value = ApiException.class)
     public MessageModel<Object> apiException(ApiException e) {
         String message = e.getMessage() == null ? e.getError().getMessage() : e.getMessage();
-        log.warn("业务异常" + message);
+        log.warn("业务异常:" + message);
         return Optional.ofNullable(e.getError())
                 .map((error) -> MessageModel.result(error.getCode(), error.getMessage(), null))
                 .orElseGet(() -> MessageModel.failed(e.getMessage()));
@@ -40,6 +46,11 @@ public class ExceptionAspect {
                 .toString();
     }
 
+    /**
+     * 校验参数异常
+     * @param e
+     * @return
+     */
     @ExceptionHandler(value = {MethodArgumentNotValidException.class, BindException.class})
     public MessageModel<Object> validException(Exception e) {
         log.warn("校验参数异常:" + e.getMessage());
@@ -60,10 +71,16 @@ public class ExceptionAspect {
         return model;
     }
 
+    /**
+     * sql异常
+     * @param e
+     * @return
+     */
     @ExceptionHandler(SQLException.class)
     public MessageModel<Object> sqlException(SQLException e) {
-        log.warn("sql异常" + e.getMessage());
+        log.warn("sql异常:" + e.getMessage());
         return MessageModel.failed(e.getMessage());
     }
+
 
 }

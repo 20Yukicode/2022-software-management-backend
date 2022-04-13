@@ -1,7 +1,6 @@
 package com.campus.love.message.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.message.domain.enums.ReadState;
@@ -10,8 +9,6 @@ import com.campus.love.message.mapper.ChatRecordMapper;
 import com.campus.love.message.service.ChatService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Primary

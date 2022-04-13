@@ -94,4 +94,19 @@ public class MessageModel<T> implements Serializable {
         return result(ResultCode.UNAUTHORIZED,null);
     }
 
+
+    /**
+     * 远程调用服务失败
+     * @param message
+     * @param <T>
+     * @return
+     */
+    public static<T> MessageModel<T> feignFailed(String message){
+        return result(ResultCode.FEIGN_FAILED.getCode(),message,null);
+    }
+
+    public static <T> MessageModel<T> feignFailed(){
+        return result(ResultCode.FEIGN_FAILED,null);
+    }
+
 }

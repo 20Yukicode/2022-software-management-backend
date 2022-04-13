@@ -1,9 +1,9 @@
-package com.campus.love.common.feign.tweet;
+package com.campus.love.common.feign.module.tweet;
 
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.feign.domain.FeignConstant;
-import com.campus.love.common.feign.tweet.dto.CommentDto;
-import com.campus.love.common.feign.tweet.dto.LikesDto;
+import com.campus.love.common.feign.module.tweet.dto.CommentDto;
+import com.campus.love.common.feign.module.tweet.dto.LikesDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

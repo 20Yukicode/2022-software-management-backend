@@ -1,4 +1,4 @@
-package com.campus.love.common.feign.message;
+package com.campus.love.common.feign.module.message;
 
 import org.springframework.cloud.openfeign.FeignClient;
 

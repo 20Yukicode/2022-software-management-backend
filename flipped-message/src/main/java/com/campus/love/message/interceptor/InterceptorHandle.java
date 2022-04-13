@@ -11,8 +11,8 @@ public class InterceptorHandle extends BaseInterceptorHandle {
     public EnableProperties enableProperties() {
         return EnableProperties
                 .of()
-                .enableGateway()
-                .enableFeign()
+//                .enableGateway()
+//                .enableFeign()
                 .enableModule();
     }
 }

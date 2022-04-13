@@ -1,4 +1,4 @@
-package com.campus.love.common.feign.user.dto;
+package com.campus.love.common.feign.module.user.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

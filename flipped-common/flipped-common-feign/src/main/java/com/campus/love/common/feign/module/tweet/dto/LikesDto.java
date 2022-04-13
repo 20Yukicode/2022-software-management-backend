@@ -1,4 +1,4 @@
-package com.campus.love.common.feign.tweet.dto;
+package com.campus.love.common.feign.module.tweet.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

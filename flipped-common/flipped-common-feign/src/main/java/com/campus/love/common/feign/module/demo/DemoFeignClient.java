@@ -1,4 +1,4 @@
-package com.campus.love.common.feign.demo;
+package com.campus.love.common.feign.module.demo;
 
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.feign.domain.FeignConstant;
