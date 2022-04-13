@@ -38,3 +38,5 @@ application-*.yaml
 
 ### Test Class ###
 /**/test/java/
+
+/**/docker/

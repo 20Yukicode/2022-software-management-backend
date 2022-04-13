@@ -24,6 +24,7 @@
         <module>flipped-tweet</module>
         <module>flipped-user</module>
         <module>flipped-match</module>
+        <module>flipped-auth</module>
     </modules>
 
     <properties>
