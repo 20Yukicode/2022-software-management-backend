@@ -2,11 +2,9 @@ package com.campus.love.user.interceptor;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.campus.love.common.core.api.ResultCode;
-import com.campus.love.common.core.domain.EnableProperties;
 import com.campus.love.common.core.handle.BaseInterceptorHandle;
 import com.campus.love.common.core.util.InterceptorUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -18,13 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @Slf4j
-@RefreshScope
 public class InterceptorHandle extends BaseInterceptorHandle {
-
-    @Override
-    public EnableProperties enableProperties() {
-        return null;
-    }
 
     @Override
     public void moduleInterceptor(InterceptorRegistry registry) {

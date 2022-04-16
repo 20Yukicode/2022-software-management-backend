@@ -1,18 +1,15 @@
 package com.campus.love.message.interceptor;
 
-import com.campus.love.common.core.domain.EnableProperties;
 import com.campus.love.common.core.handle.BaseInterceptorHandle;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
-@Component
+@Configuration
 public class InterceptorHandle extends BaseInterceptorHandle {
 
     @Override
-    public EnableProperties enableProperties() {
-        return EnableProperties
-                .of()
-//                .enableGateway()
-//                .enableFeign()
-                .enableModule();
+    public void moduleInterceptor(InterceptorRegistry registry) {
+
     }
 }

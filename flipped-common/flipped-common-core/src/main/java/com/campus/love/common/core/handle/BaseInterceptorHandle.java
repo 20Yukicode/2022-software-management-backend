@@ -1,11 +1,13 @@
 package com.campus.love.common.core.handle;
 
-import com.campus.love.common.core.domain.EnableProperties;
+import com.campus.love.common.core.config.AuthenticationConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
 
+@Slf4j
 public abstract class BaseInterceptorHandle implements WebMvcConfigurer {
 
     @Resource
@@ -14,9 +16,10 @@ public abstract class BaseInterceptorHandle implements WebMvcConfigurer {
     @Resource
     private FeignInterceptor feignInterceptor;
 
-    public abstract EnableProperties enableProperties();
+    @Resource
+    private AuthenticationConfig authenticationConfig;
 
-    public void moduleInterceptor(InterceptorRegistry registry){}
+    public abstract void moduleInterceptor(InterceptorRegistry registry);
 
     /**
      * spring升级后，通配符不再是**
@@ -25,22 +28,36 @@ public abstract class BaseInterceptorHandle implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        if(enableProperties()!=null) {
-
-            if (enableProperties().getGateway()) {
-                registry.addInterceptor(gatewayInterceptor)
-                        .excludePathPatterns("/feign/*");
-            }
-            //.addPathPatterns("/**")
-            if (enableProperties().getFeign()) {
-                registry.addInterceptor(feignInterceptor)
-                        .addPathPatterns("/feign/*");
-            }
-            if (enableProperties().getModule()) {
-                moduleInterceptor(registry);
-            }
-
-            WebMvcConfigurer.super.addInterceptors(registry);
+        if (authenticationConfig.isMustGateway()) {
+            registry.addInterceptor(gatewayInterceptor)
+                    .excludePathPatterns("/feign/*");
         }
+        if (authenticationConfig.isMustFeign()) {
+            registry.addInterceptor(feignInterceptor)
+                    .addPathPatterns("/feign/*");
+        }
+        moduleInterceptor(registry);
     }
+
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        if(enableAuthentication()!=null) {
+//
+//            if (enableAuthentication().getGateway()) {
+//                registry.addInterceptor(gatewayInterceptor)
+//                        .excludePathPatterns("/feign/*");
+//            }
+//            //.addPathPatterns("/**")
+//            if (enableAuthentication().getFeign()) {
+//                registry.addInterceptor(feignInterceptor)
+//                        .addPathPatterns("/feign/*");
+//            }
+//            if (enableAuthentication().getModule()) {
+//                moduleInterceptor(registry);
+//            }
+//
+//            WebMvcConfigurer.super.addInterceptors(registry);
+//        }
+//    }
+
 }

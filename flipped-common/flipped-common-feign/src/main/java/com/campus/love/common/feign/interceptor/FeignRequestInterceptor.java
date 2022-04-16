@@ -1,12 +1,11 @@
 package com.campus.love.common.feign.interceptor;
 
 import com.campus.love.common.core.constant.HeaderConstant;
+import com.campus.love.common.core.util.HttpUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
@@ -21,22 +20,18 @@ import java.util.Enumeration;
 public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
-
         requestTemplate.header(HeaderConstant.FEIGN_HEADER_VALUE, HeaderConstant.FEIGN_HEADER_VALUE);
 
-//        ServletRequestAttributes attributes =
-//                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//        if (attributes != null) {
-//            HttpServletRequest request = attributes.getRequest();
-//            Enumeration<String> headerNames = request.getHeaderNames();
-//            if (headerNames != null) {
-//                while (headerNames.hasMoreElements()) {
-//                    String name = headerNames.nextElement();
-//                    String values = request.getHeader(name);
-//                    requestTemplate.header(name, values);
-//                }
-//            }
-//        }
+        HttpServletRequest request = HttpUtil.currentRequest();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if (headerNames != null) {
+            while (headerNames.hasMoreElements()) {
+                String name = headerNames.nextElement();
+                String value = request.getHeader(name);
+                requestTemplate.header(name, value);
+            }
+        }
+
     }
 
 

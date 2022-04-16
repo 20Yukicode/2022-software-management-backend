@@ -5,12 +5,6 @@ spring:
   cloud:
     gateway:
       routes:
-#        - id: flipped-demo #路由唯一标识
-#          uri: lb://flipped-demo  #路由目标地址
-#          predicates:
-#            - Path=/api/flipped-demo/**
-#          filters:
-#             - StripPrefix=2
         - id: flipped-user
           uri: lb://flipped-user
           predicates:
@@ -35,6 +29,12 @@ spring:
             - Path=/api/cloud-flipped/**
           filters:
             - StripPrefix=2
+        - id: flipped-demo #路由唯一标识
+          uri: lb://flipped-demo  #路由目标地址
+          predicates:
+            - Path=/api/flipped-demo/**
+          filters:
+            - StripPrefix=2
       default-filters:
         - AddRequestHeader=TRuth,ww like nzh
         - AddRequestHeader=gateway,gateway
@@ -53,6 +53,6 @@ spring:
               - "DELETE"
               - "OPTIONS"
             allowedHeaders: "*"
-            allowedCredentials: true #是否允许带cookie
+            allow-credentials: true #是否允许带cookie
             maxAge: 3600 #此次跨域检测有效期
 
