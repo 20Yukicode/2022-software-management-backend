@@ -17,10 +17,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public MessageModel<String> login(@RequestParam("userId") Integer userId,
-                                    @RequestParam("password")String password) {
-        String login = userService.login(userId, password);
-        return MessageModel.success(login);
+    public MessageModel<String> login(@RequestParam("code") String code) {
+        //String login = userService.login(code);
+        //return MessageModel.success(login);
+        return userService.login(code);
     }
 
     @PostMapping("/logout")
