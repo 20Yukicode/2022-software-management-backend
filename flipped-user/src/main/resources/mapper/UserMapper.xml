@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.campus.love.user.entity.User">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="uid" column="uid" jdbcType="VARCHAR"/>
+            <result property="openPid" column="openPid" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="VARCHAR"/>
             <result property="state" column="state" jdbcType="INTEGER"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>

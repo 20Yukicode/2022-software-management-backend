@@ -31,7 +31,7 @@ public class User extends BaseEntity {
     /**
      * 统一身份认证uid
      */
-    private String uid;
+    private String openPid;
 
     /**
      * 性别
