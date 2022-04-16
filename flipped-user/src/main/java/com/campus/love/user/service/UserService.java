@@ -1,5 +1,6 @@
 package com.campus.love.user.service;
 
+import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.user.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +9,7 @@ import java.util.List;
 @Service
 public interface UserService {
 
-    String login(Integer userId,String password);
+    MessageModel login(String code);
 
     void logout(Integer userId);
 
@@ -20,7 +21,7 @@ public interface UserService {
 
     List<String> getSubscribedById(Integer id);
 
-
+    User getOneByPid(Integer pid);
 
 
 }
