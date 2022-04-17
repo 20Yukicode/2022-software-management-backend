@@ -35,8 +35,10 @@ build/
 ### env-resources ###
 application-*.yaml
 !application-env.template.yaml
-
+application-*.yml
+!application-env.template.yml
 ### Test Class ###
 /**/test/java/
 
 /**/docker/
+
