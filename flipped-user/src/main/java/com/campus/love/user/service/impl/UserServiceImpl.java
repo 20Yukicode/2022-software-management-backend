@@ -33,23 +33,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @GetMapping("login")
-    public MessageModel login(String code) {
-        MessageModel response = LoginUtil.getPluginOpenPId(code);
-        //若成功获取openPid，判断为登陆成功
-        if (response.getCode() == ResultCode.SUCCESS.getCode()) {
-            return response;
-        }
-        //否则登陆失败
-        else {
-            return response;
-        }
-//        JSONObject jsonObject = LoginUtil.getAuth(code);//包含openID与secret
-//        JSONObject res = new JSONObject();
-//        String openid = jsonObject.getString("openid");
-//        res.put("openid", openid);
-//        boolean newUser = userService.createUserByOpenId(openid);
-//        res.put("newuser", newUser);
-//        return MessageModel.success();
+    public String login(String code) {
+        return LoginUtil.getPluginOpenPId(code);
     }
 
     @Override
@@ -85,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getOneByPid(Integer pid) {
+    public User getOneByPid(String pid) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("openPid",pid);
         return userMapper.selectOne(wrapper);

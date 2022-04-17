@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface UserService {
 
-    MessageModel login(String code);
+    String login(String code);
 
     void logout(Integer userId);
 
@@ -21,7 +21,7 @@ public interface UserService {
 
     List<String> getSubscribedById(Integer id);
 
-    User getOneByPid(Integer pid);
+    User getOneByPid(String pid);
 
 
 }

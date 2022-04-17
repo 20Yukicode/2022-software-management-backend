@@ -17,10 +17,26 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public MessageModel<String> login(@RequestParam("code") String code) {
-        //String login = userService.login(code);
-        //return MessageModel.success(login);
-        return userService.login(code);
+    public MessageModel login(@RequestParam("code") String code) {
+        //先获取openpid，再判断pid是否已经注册，若是，则直接登录，否则需要注册
+        String openPid = userService.login(code);
+        //获取pid失败
+        if ("error".equals(openPid)) {
+            return MessageModel.failed();
+        }
+        else {
+            //判断是否已经注册
+            User user = userService.getOneByPid(openPid);
+            //未注册
+            if (user == null) {
+                // to be continued
+                return MessageModel.success(user.getId());
+            }
+            //已注册，直接登录
+            else {
+                return MessageModel.success("login",user.getId());
+            }
+        }
     }
 
     @PostMapping("/logout")
