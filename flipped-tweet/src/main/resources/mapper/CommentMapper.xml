@@ -9,6 +9,7 @@
             <result property="pTweetId" column="p_tweet_id" jdbcType="INTEGER"/>
             <result property="pCommentId" column="p_comment_id" jdbcType="INTEGER"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="likesNum" column="likes_num" jdbcType="INTEGER"/>
             <result property="commentNum" column="comment_num" jdbcType="INTEGER"/>
             <result property="userId" column="user_id" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
@@ -17,7 +18,7 @@
 
     <sql id="Base_Column_List">
         id,p_tweet_id,p_comment_id,
-        content,comment_num,user_id,
+        content,likes_num,comment_num,user_id,
         create_time,update_time
     </sql>
 </mapper>
