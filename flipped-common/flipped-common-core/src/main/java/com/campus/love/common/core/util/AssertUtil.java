@@ -7,8 +7,6 @@ import com.campus.love.common.core.exception.ApiException;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class AssertUtil {
@@ -68,41 +66,31 @@ public class AssertUtil {
 
     /**
      * 用来controller层的参数校验
-     *
-     * @param obj
-     * @param message
      */
     public static void validateNull(Object obj, String message) {
         nullFunction(obj, message, ResultCode.VALIDATE_FAILED);
     }
 
+    public static void validateNull(Collection<?> collection, String message) {
+        nullFunction(collection, message, ResultCode.VALIDATE_FAILED);
+    }
+
+    public static void validateNull(Supplier<Boolean> supplier, String message) {
+        nullFunction(supplier, message, ResultCode.VALIDATE_FAILED);
+    }
+
     /**
      * 用于业务层的判空检验
-     *
-     * @param obj
-     * @param message
      */
     public static void ifNull(Object obj, String message) {
         nullFunction(obj, message, ResultCode.FAILED);
     }
 
-    /**
-     * 用于业务层的判空校验
-     *
-     * @param obj
-     * @param message
-     */
     public static void ifNull(Collection<?> obj, String message) {
         nullFunction(obj, message, ResultCode.FAILED);
     }
 
-    /**
-     * 用于业务层的判空校验
-     *
-     * @param supplier
-     * @param message
-     */
-    public static void ifNull(Supplier<Boolean> supplier, String message) {
+    public static void failed(Supplier<Boolean> supplier, String message) {
         nullFunction(supplier, message, ResultCode.FAILED);
     }
 

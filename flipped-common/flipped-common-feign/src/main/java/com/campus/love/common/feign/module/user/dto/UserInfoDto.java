@@ -6,6 +6,9 @@ import lombok.Data;
 @Data
 public class UserInfoDto {
 
+    @ApiModelProperty("用户Id")
+    private Integer userId;
+
     @ApiModelProperty("用户姓名")
     private String userName;
 
