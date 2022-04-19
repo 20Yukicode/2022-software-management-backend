@@ -5,7 +5,11 @@ import com.campus.love.common.core.api.ResultCode;
 import com.campus.love.common.core.exception.ApiException;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class AssertUtil {
 
@@ -35,46 +39,71 @@ public class AssertUtil {
         }
     }
 
-    public static void ifNull(Object obj, String message) {
-        if(obj==null){
+    private static void nullFunction(Object obj, String message, ResultCode code) {
+        if (obj == null) {
             Optional.ofNullable(message)
-                    .ifPresentOrElse(
-                            m -> AssertUtil.failed(ResultCode.VALIDATE_FAILED.getCode(), m),
-                            () -> AssertUtil.failed(ResultCode.VALIDATE_FAILED)
+                    .ifPresentOrElse((m) -> AssertUtil.failed(code.getCode(), m),
+                            () -> AssertUtil.failed(code)
                     );
         }
     }
+
+    private static void nullFunction(Collection<?> collection, String message, ResultCode code) {
+        if (collection == null || collection.size() == 0) {
+            Optional.ofNullable(message)
+                    .ifPresentOrElse((m) -> AssertUtil.failed(code.getCode(), m),
+                            () -> AssertUtil.failed(code)
+                    );
+        }
+    }
+
+    private static void nullFunction(Supplier<Boolean> supplier, String message, ResultCode code) {
+        if (supplier.get()) {
+            Optional.ofNullable(message)
+                    .ifPresentOrElse((m) -> AssertUtil.failed(code.getCode(), m),
+                            () -> AssertUtil.failed(code)
+                    );
+        }
+    }
+
     /**
-     * 判断是否为空
+     * 用来controller层的参数校验
      *
      * @param obj
      * @param message
      */
-    private static void isNull(Object obj, String message) {
-        Optional.ofNullable(obj)
-                .ifPresentOrElse(
-                        (o) -> AssertUtil.failed(message),
-                        () -> Optional.ofNullable(message)
-                                .ifPresentOrElse(
-                                        m -> AssertUtil.failed(ResultCode.VALIDATE_FAILED.getCode(), m),
-                                        () -> AssertUtil.failed(ResultCode.VALIDATE_FAILED)
-                                )
-                );
+    public static void validateNull(Object obj, String message) {
+        nullFunction(obj, message, ResultCode.VALIDATE_FAILED);
     }
 
     /**
-     * 判断是否为空
+     * 用于业务层的判空检验
      *
      * @param obj
+     * @param message
      */
-    public static void isNull(Object obj) {
-        isNull(obj, null);
+    public static void ifNull(Object obj, String message) {
+        nullFunction(obj, message, ResultCode.FAILED);
     }
 
-
-    public static void isNull(String message){
-        isNull(null,message);
+    /**
+     * 用于业务层的判空校验
+     *
+     * @param obj
+     * @param message
+     */
+    public static void ifNull(Collection<?> obj, String message) {
+        nullFunction(obj, message, ResultCode.FAILED);
     }
 
+    /**
+     * 用于业务层的判空校验
+     *
+     * @param supplier
+     * @param message
+     */
+    public static void ifNull(Supplier<Boolean> supplier, String message) {
+        nullFunction(supplier, message, ResultCode.FAILED);
+    }
 
 }
