@@ -1,7 +1,7 @@
 mybatis-plus:
   mapper-locations:
     - mapper/**/*.xml
-
+spring:
   servlet:
     multipart:
       enabled: true
