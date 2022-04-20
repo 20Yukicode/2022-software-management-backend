@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.api.ResultCode;
+import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.core.util.FileUtil;
 import com.campus.love.common.core.util.LoginUtil;
@@ -46,12 +47,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @GetMapping("login")
-    public String login(String code) {
+    public String login(String code) throws ApiException{
         return LoginUtil.getPluginOpenPId(code);
     }
 
     @Override
     public void logout(Integer userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            AssertUtil.failed("找不到该用户");
+        }
+        //设置登陆状态
+        user.setLoginState(0);
+        userMapper.updateById(user);
         StpUtil.logout(userId);
     }
 
@@ -86,7 +94,11 @@ public class UserServiceImpl implements UserService {
     public User getOneByPid(String pid) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("openPid",pid);
-        return userMapper.selectOne(wrapper);
+        User user = userMapper.selectOne(wrapper);
+        if (user == null) {
+            AssertUtil.failed("找不到该用户");
+        }
+        return user;
     }
 
     /**

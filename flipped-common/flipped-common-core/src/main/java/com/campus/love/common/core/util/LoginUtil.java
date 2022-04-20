@@ -3,6 +3,7 @@ package com.campus.love.common.core.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.campus.love.common.core.api.MessageModel;
+import com.campus.love.common.core.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -30,6 +31,7 @@ public class LoginUtil {
      * 小程序全局唯一后台接口调用凭据
      */
     static private String access_token;
+
     private static final RestTemplate restTemplate = new RestTemplate();
 
     static {
@@ -87,7 +89,7 @@ public class LoginUtil {
         //获取失败
         else {
             log.info("openPid Failed:"+errMsg);
-            return "error";
+            throw new ApiException(errMsg);
         }
     }
 

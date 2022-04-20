@@ -101,6 +101,11 @@ public class User extends BaseEntity {
      */
     private String photoAlbum;
 
+    /**
+     * 登录状态（0-未登录，1-已登录）
+     */
+    private int loginState;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

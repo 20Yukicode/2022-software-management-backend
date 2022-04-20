@@ -1,6 +1,7 @@
 package com.campus.love.user.controller;
 
 import com.campus.love.common.core.api.MessageModel;
+import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -19,30 +20,31 @@ public class UserController {
 
     @PostMapping("/login")
     public MessageModel login(@RequestParam("code") String code) {
-        //先获取openpid，再判断pid是否已经注册，若是，则直接登录，否则需要注册
-        String openPid = userService.login(code);
-        //获取pid失败
-        if ("error".equals(openPid)) {
-            return MessageModel.failed();
-        }
-        else {
+        try {
+            //先获取openpid，再判断pid是否已经注册，若是，则直接登录，否则需要注册
+            String openPid = userService.login(code);
             //判断是否已经注册
             User user = userService.getOneByPid(openPid);
             //未注册
             if (user == null) {
                 // to be continued
-                return MessageModel.success(user.getId());
+                return MessageModel.success("用户未注册", user.getId());
             }
-            //已注册，直接登录
+            //已注册，判断登陆状态
+            else if(user.getLoginState() == 0) {
+                return MessageModel.success("用户未登录", user.getId());
+            }
             else {
-                return MessageModel.success("login",user.getId());
+                return MessageModel.success("用户已登录", user.getId());
             }
+        } catch (ApiException e) {
+            return MessageModel.failed(e.getMessage());
         }
+
     }
 
     @PostMapping("/logout")
     public MessageModel<Object> logout(@RequestParam("userId") Integer  userId){
-
         userService.logout(userId);
         return MessageModel.success();
     }

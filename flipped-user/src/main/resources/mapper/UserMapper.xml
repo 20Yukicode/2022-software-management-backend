@@ -20,6 +20,7 @@
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="blacklist" column="blacklist" jdbcType="VARCHAR"/>
             <result property="photoAlbum" column="photo_album" jdbcType="VARCHAR"/>
+            <result property="loginState" column="login_state" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -30,7 +31,7 @@
         phone,avatar,degree,
         major,height,weight,
         description,blacklist,photo_album,
-        create_time,update_time
+        login_state,create_time,update_time
     </sql>
     <select id="getSubscribedById" resultType="String">
         select user.nickname
