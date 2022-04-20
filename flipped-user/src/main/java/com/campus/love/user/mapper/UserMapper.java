@@ -12,6 +12,7 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     List<String> getSubscribedById(@Param("userId")Integer userId);
+
 }
 
 

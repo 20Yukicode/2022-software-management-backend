@@ -4,6 +4,7 @@ import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -68,5 +69,12 @@ public class UserController {
     public MessageModel<List<String>> querySubscribedById(@PathVariable Integer id) {
 
         return MessageModel.success(userService.getSubscribedById(id));
+    }
+
+    @PostMapping("/user/avatar/userId/{id}")
+    public MessageModel<String> alterAvatar(@PathVariable Integer id,
+                                                          @RequestPart("file") MultipartFile file) {
+
+        return MessageModel.success(userService.updateAvatar(id,file));
     }
 }

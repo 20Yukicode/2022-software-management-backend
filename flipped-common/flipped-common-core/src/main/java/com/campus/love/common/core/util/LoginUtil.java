@@ -43,8 +43,9 @@ public class LoginUtil {
         Map<String,Object> map;
         Yaml yaml = new Yaml();
         map = yaml.load(inputStream);
-        appID = map.get("appid").toString();
-        appSecret = map.get("appsecret").toString();
+        Map<String,String> wechatMap = (Map)map.get("wechat");
+        appID = wechatMap.get("appid").toString();
+        appSecret = wechatMap.get("appsecret").toString();
 
         log.info("ww:"+appID);
         JSONObject response = restTemplate.getForObject("https://api.weixin.qq.com/cgi-bin" +
