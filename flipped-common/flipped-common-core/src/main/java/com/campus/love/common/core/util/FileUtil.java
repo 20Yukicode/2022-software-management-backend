@@ -62,10 +62,6 @@ public class FileUtil {
                 .collect(Collectors.toList());
     }
 
-    public static String save(MultipartFile multipartFile,String filePath) {
-        return saveFile(filePath, multipartFile);
-    }
-
 
     public static String saveFile(String filePath,MultipartFile multipartFile) {
         OSS ossClient = new OSSClientBuilder().build(endpoint,accessKeyId,accessKeySecret);
