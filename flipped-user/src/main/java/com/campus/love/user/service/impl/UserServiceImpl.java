@@ -111,15 +111,15 @@ public class UserServiceImpl implements UserService {
             FileUtil.deleteFile(value[1]);
         }
         String filePath = USER_PATH + "/" + id + "/" + AVATAR_PATH + "/" + file.getOriginalFilename();
-        String fileUrl = BASE_PATH + "/" + filePath;
+
+        //添加新头像（oss）
+        String fileUrl = FileUtil.saveFile(file,filePath);
         //添加新头像（mysql）
         QueryWrapper updateWrapper = new QueryWrapper();
         updateWrapper.eq("id",id);
         user.setAvatar(fileUrl);
         userMapper.update(user,updateWrapper);
 
-        //添加新头像（oss）
-        FileUtil.saveFile(file,filePath);
 
         return fileUrl;
     }

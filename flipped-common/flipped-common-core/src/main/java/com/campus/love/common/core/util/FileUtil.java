@@ -24,6 +24,8 @@ public class FileUtil {
 
     private static String bucketName;
 
+    private static String base_path;
+
     static {
         //读取yml配置文件，获得appId和appSecret
         InputStream inputStream = null;
@@ -36,15 +38,16 @@ public class FileUtil {
         Yaml yaml = new Yaml();
         map = yaml.load(inputStream);
         Map<String,String> ossMap = (Map)map.get("oss");
-        endpoint = ossMap.get("endpoint").toString();
-        accessKeyId = ossMap.get("accessKeyId").toString();
-        accessKeySecret = ossMap.get("accessKeySecret").toString();
-        bucketName = ossMap.get("bucketName").toString();
+        endpoint = ossMap.get("endpoint");
+        accessKeyId = ossMap.get("accessKeyId");
+        accessKeySecret = ossMap.get("accessKeySecret");
+        bucketName = ossMap.get("bucketName");
 
+        base_path = "https://" + bucketName + "." + endpoint;
         //  to be continued
     }
 
-    public static void saveFile(MultipartFile multipartFile, String filePath) {
+    public static String saveFile(MultipartFile multipartFile, String filePath) {
         OSS ossClient = new OSSClientBuilder().build(endpoint,accessKeyId,accessKeySecret);
         if (multipartFile != null) {
             try {
@@ -66,6 +69,7 @@ public class FileUtil {
                 }
             }
         }
+        return base_path + "/" +filePath;
     }
 
     public static void deleteFile(String fileUrl) {
