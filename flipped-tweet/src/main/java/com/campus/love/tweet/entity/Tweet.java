@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.campus.love.common.core.domain.BaseEntity;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -16,6 +17,7 @@ import lombok.Data;
  */
 @TableName(value ="tweet")
 @Data
+@Builder
 public class Tweet extends BaseEntity {
     /**
      * 动态id

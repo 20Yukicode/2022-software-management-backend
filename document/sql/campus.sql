@@ -11,7 +11,7 @@
  Target Server Version : 80027
  File Encoding         : 65001
 
- Date: 16/04/2022 23:41:28
+ Date: 20/04/2022 13:06:29
 */
 
 SET NAMES utf8mb4;
@@ -41,6 +41,7 @@ CREATE TABLE `comment`  (
   `p_tweet_id` int NULL DEFAULT NULL COMMENT '父节点是动态',
   `p_comment_id` int NULL DEFAULT NULL COMMENT '父节点是评论',
   `content` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '内容',
+  `likes_num` int NULL DEFAULT NULL COMMENT '点赞数',
   `comment_num` int NULL DEFAULT NULL COMMENT '评论数',
   `user_id` int NULL DEFAULT NULL COMMENT '用户id',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
@@ -147,7 +148,6 @@ CREATE TABLE `topic`  (
   `heading` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '标题',
   `participants` int NULL DEFAULT NULL COMMENT '参与人数',
   `tweet_num` int NULL DEFAULT NULL COMMENT '动态数量',
-  `introduction` varchar(10000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '话题介绍',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
