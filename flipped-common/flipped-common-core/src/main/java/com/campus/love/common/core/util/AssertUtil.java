@@ -7,6 +7,7 @@ import com.campus.love.common.core.exception.ApiException;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class AssertUtil {
@@ -77,6 +78,10 @@ public class AssertUtil {
 
     public static void validateNull(Supplier<Boolean> supplier, String message) {
         nullFunction(supplier, message, ResultCode.VALIDATE_FAILED);
+    }
+
+    public static void validateNull(String message) {
+        validateNull((Object) null, message);
     }
 
     /**
