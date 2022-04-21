@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -51,6 +52,7 @@ public class UserController {
 
     @PostMapping("")
     public MessageModel<User> addOneUser(@RequestBody User user){
+        //用户注册
         User insertUser = userService.insertUser(user);
         return MessageModel.success(insertUser);
     }
@@ -73,10 +75,16 @@ public class UserController {
         return MessageModel.success(userService.getSubscribedById(id));
     }
 
-    @PostMapping("/user/avatar/userId/{id}")
+    @PostMapping("/avatar/userId/{id}")
     public MessageModel<String> alterAvatar(@PathVariable Integer id,
                                                           @RequestPart("file") MultipartFile file) {
 
         return MessageModel.success(userService.updateAvatar(id,file));
+    }
+
+    @PostMapping("/userInfo")
+    public MessageModel<Integer> alterUserInfo(@RequestBody User user) {
+
+        return MessageModel.success(userService.updateUserInfo(user));
     }
 }

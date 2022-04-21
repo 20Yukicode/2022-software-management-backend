@@ -6,13 +6,12 @@
 
     <resultMap id="BaseResultMap" type="com.campus.love.user.entity.Subscribed">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="isSubscribed" column="is_subscribed" jdbcType="INTEGER"/>
-            <result property="firstUserid" column="first_user_id" jdbcType="INTEGER"/>
-            <result property="secondUserid" column="second_user_id" jdbcType="INTEGER"/>
+            <result property="firstUserId" column="first_user_id" jdbcType="INTEGER"/>
+            <result property="secondUserId" column="second_user_id" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,is_subscribed,first_userid,
-        second_userid
+        id,first_user_id,
+        second_user_id
     </sql>
 </mapper>

@@ -1,11 +1,14 @@
 package com.campus.love.common.feign.module.user.dto;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@Builder
 public class SubscribedUserDto {
 
     @ApiModelProperty("用户Id")

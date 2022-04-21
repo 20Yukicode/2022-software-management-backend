@@ -56,6 +56,10 @@
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <artifactId>flipped-common-feign</artifactId>
+            <groupId>com.campus.love</groupId>
+        </dependency>
     </dependencies>
 
 

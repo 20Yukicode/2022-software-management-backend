@@ -23,19 +23,14 @@ public class Subscribed  extends BaseEntity {
     private Integer id;
 
     /**
-     * 是否关注
-     */
-    private Integer isSubscribed;
-
-    /**
      * 关注者A
      */
-    private Integer firstUserid;
+    private Integer firstUserId;
 
     /**
      * 关注者B
      */
-    private Integer secondUserid;
+    private Integer secondUserId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

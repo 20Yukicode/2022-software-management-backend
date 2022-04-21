@@ -13,6 +13,7 @@ import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.core.util.FileUtil;
 import com.campus.love.common.core.util.LoginUtil;
+import com.campus.love.user.entity.Criteria;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.mapper.SubscribedMapper;
 import com.campus.love.user.mapper.UserMapper;
@@ -120,12 +121,14 @@ public class UserServiceImpl implements UserService {
         if (!StringUtils.isEmpty(oldAvatar)) {
             //除去域名前缀
             String[] value = oldAvatar.split(BASE_PATH+"/");
-            FileUtil.deleteFile(value[1]);
+            if (value.length > 1) {
+                FileUtil.deleteFile(value[1]);
+            }
         }
         String filePath = USER_PATH + "/" + id + "/" + AVATAR_PATH + "/" + file.getOriginalFilename();
 
         //添加新头像（oss）
-        String fileUrl = FileUtil.saveFile(file,filePath);
+        String fileUrl = FileUtil.saveFile(filePath, file);
         //添加新头像（mysql）
         QueryWrapper updateWrapper = new QueryWrapper();
         updateWrapper.eq("id",id);
@@ -135,4 +138,15 @@ public class UserServiceImpl implements UserService {
 
         return fileUrl;
     }
+
+    /**
+     * 更新用户信息
+     * @param user
+     * @return
+     */
+    @Override
+    public int updateUserInfo(User user) {
+        return userMapper.updateById(user);
+    }
+
 }

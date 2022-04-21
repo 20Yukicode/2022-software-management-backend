@@ -1,6 +1,7 @@
 package com.campus.love.user.service;
 
 import com.campus.love.common.core.api.MessageModel;
+import com.campus.love.user.entity.Criteria;
 import com.campus.love.user.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,5 +26,11 @@ public interface UserService {
     User getOneByPid(String pid);
 
     String updateAvatar(Integer id, MultipartFile file);
+
+    int updateUserInfo(User user);
+
+
+
+
 
 }
