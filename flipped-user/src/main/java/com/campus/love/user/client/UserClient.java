@@ -33,7 +33,7 @@ public class UserClient implements UserFeignClient {
     }
 
     @Override
-    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX + "/subscribed")
+    //@GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX + "/subscribed")
     public MessageModel<List<SubscribedUserDto>> querySubscribedInfo(@RequestParam("userId") Integer userId) {
         List<Subscribed> subscribedList = subscribedService.getSubscribedList(userId);
         List<SubscribedUserDto> userList = subscribedList.stream()
@@ -51,8 +51,17 @@ public class UserClient implements UserFeignClient {
     }
 
     @Override
-    public MessageModel<UserInfoDto> queryUserInfos(Integer userId) {
-        return null;
+    public MessageModel<UserInfoDto> queryUserInfos(@RequestParam("userId") Integer userId) {
+        User user = userService.getOneById(userId);
+        if (user != null) {
+            UserInfoDto userInfoDto = UserInfoDto.builder()
+                    .userId(user.getId())
+                    .userName(user.getNickname())
+                    .userAvatar(user.getAvatar())
+                    .build();
+            return MessageModel.success(userInfoDto);
+        }
+        return MessageModel.failed("用户不存在");
     }
 
     @Override
