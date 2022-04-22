@@ -32,8 +32,8 @@ public class TweetServiceImpl implements TweetService {
         this.commentService = commentService;
     }
 
-    private<T> TweetVo<T> transferToVo(Tweet tweet,List<T> list){
-        TweetVo<T> tweetVo=new TweetVo<>();
+    private <T> TweetVo<T> transferToVo(Tweet tweet, List<T> list) {
+        TweetVo<T> tweetVo = new TweetVo<>();
         tweetVo.setComments(list);
 
         TweetBo build = TweetBo.builder()
@@ -52,6 +52,7 @@ public class TweetServiceImpl implements TweetService {
 
         return tweetVo;
     }
+
     @Override
     public TweetVo<CommentBo> getCommentsByTweet(Integer tweetId) {
         List<Comment> commentsByTweet = tweetManage.getCommentsByTweet(tweetId);
@@ -71,18 +72,17 @@ public class TweetServiceImpl implements TweetService {
 
         Tweet tweet = tweetManage.getOneTweet(tweetId);
 
-        List<CommentTreeNodeVo<CommentBo>> list = new ArrayList<>();
-        commentsByTweet.forEach(item -> {
-            CommentTreeNodeVo<CommentBo> commentCommentTreeNodeVo =
-                    commentService.GetAllComments(item.getId(),order);
-            list.add(commentCommentTreeNodeVo);
-        });
-        //todo 这个list的每个元素只要前五个子评论
-        list.parallelStream().forEach(item->{
-            List<CommentBo> childCommentNodes = item.getChildCommentNodes();
-            //childCommentNodes只要前五个
-        });
+        List<CommentTreeNodeVo<CommentBo>> collect = commentsByTweet
+                .stream()
+                .map(item -> commentService.GetAllComments(item.getId(), order))
+                .collect(Collectors.toList());
 
-        return transferToVo(tweet, list);
+//        //todo 这个list的每个元素只要前五个子评论
+//        collect.parallelStream().forEach(item -> {
+//            List<CommentBo> childCommentNodes = item.getChildCommentNodes();
+//            //childCommentNodes只要前五个
+//        });
+
+        return transferToVo(tweet, collect);
     }
 }

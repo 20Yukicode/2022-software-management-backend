@@ -34,7 +34,7 @@ public class TweetController {
 
     }
 
-    @ApiOperation("展示一条动态及下面的所有评论及下面的五条评论(可以间接)")
+    @ApiOperation("展示一条动态及下面的所有评论及下面的所有评论(可以间接)")
     @GetMapping("/{tweetId}/all")
     public MessageModel<TweetVo<CommentTreeNodeVo<CommentBo>>>
     queryInDirectCommentsByTweet(@PathVariable Integer tweetId,

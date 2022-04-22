@@ -12,7 +12,7 @@ import java.util.Date;
 public class SubscribedUserDto {
 
     @ApiModelProperty("用户Id")
-    private int userId;
+    private Integer userId;
 
     @ApiModelProperty("用户名称")
     private String name;
@@ -24,5 +24,5 @@ public class SubscribedUserDto {
     private Date createTime;
 
     @ApiModelProperty("回关")
-    private boolean isFollow;
+    private Boolean isFollow;
 }

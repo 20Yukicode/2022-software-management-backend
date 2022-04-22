@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -50,16 +51,16 @@ public class FileUtil {
         //  to be continued
     }
 
-    public static List<String> saveFiles(String filePath,List<MultipartFile> files) {
+    public static String saveFiles(String filePath,List<MultipartFile> files) {
         return files.parallelStream()
                 .map(item -> saveFile(filePath, item))
-                .collect(Collectors.toList());
+                .collect(Collectors.joining(","));
     }
 
-    public static List<String> saveFiles(String filePath,MultipartFile... files) {
+    public static String saveFiles(String filePath,MultipartFile... files) {
         return Arrays.stream(files).parallel()
                 .map(item -> saveFile(filePath, item))
-                .collect(Collectors.toList());
+                .collect(Collectors.joining(","));
     }
 
 
@@ -112,4 +113,8 @@ public class FileUtil {
         }
     }
 
+    public static String saveTweets(Integer tweetId,List<MultipartFile> files) {
+        String path = "tweet" + tweetId;
+        return FileUtil.saveFiles(path, files);
+    }
 }

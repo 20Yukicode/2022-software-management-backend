@@ -1,13 +1,16 @@
 package com.campus.love.tweet.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
+import com.campus.love.common.core.util.FileUtil;
+import com.campus.love.tweet.domain.vo.PostTweetVo;
 import com.campus.love.tweet.entity.Tweet;
+import com.campus.love.tweet.manage.UserTweetManage;
 import com.campus.love.tweet.mapper.TweetMapper;
 import com.campus.love.tweet.service.UserTweetService;
-import com.campus.love.tweet.util.FileUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,8 +19,11 @@ public class UserTweetServiceImpl implements UserTweetService {
 
     private final TweetMapper tweetMapper;
 
-    public UserTweetServiceImpl(TweetMapper tweetMapper) {
+    private final UserTweetManage userTweetManage;
+
+    public UserTweetServiceImpl(TweetMapper tweetMapper, UserTweetManage userTweetManage) {
         this.tweetMapper = tweetMapper;
+        this.userTweetManage = userTweetManage;
     }
 
     @Override
@@ -27,24 +33,25 @@ public class UserTweetServiceImpl implements UserTweetService {
         return tweetMapper.selectList(queryWrapper);
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     @Override
-    public Integer addTweet(List<MultipartFile> files, String topic, String content, Integer userId) {
-        String urls = FileUtil.getUrls(files);
-        Tweet tweet = Tweet.builder()
-                .url(urls)
-                .topic(topic)
-                .content(content)
-                .userId(userId)
-                .content(content).build();
+    public void addTweet(PostTweetVo tweetVo) {
+        Tweet tweet = userTweetManage.postVo2tweet(tweetVo);
         int insert = tweetMapper.insert(tweet);
-        if(insert==0){
+        if (insert == 0) {
             AssertUtil.failed("插入动态失败");
         }
-        return tweet.getId();
+        tweet.setUrl(FileUtil.saveTweets(tweet.getId(), tweetVo.getFiles()));
+        int i = tweetMapper.updateById(tweet);
+        if(i==0){
+            AssertUtil.failed("插入动态失败(插入图片)");
+        }
     }
 
     @Override
-    public void changeTweet(Tweet tweet) {
+    public void changeTweet(PostTweetVo tweetVo) {
+
+        Tweet tweet = userTweetManage.postVo2tweet(tweetVo);
         int i = tweetMapper.updateById(tweet);
         if(i==0){
             AssertUtil.failed("动态Id为"+tweet.getId()+"不存在");

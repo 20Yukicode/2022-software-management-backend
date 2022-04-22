@@ -59,7 +59,7 @@ public class ChatController {
     }
 
     @ApiOperation("删除一条聊天记录")
-    @DeleteMapping("/chatRecordId/{chatRecordId}")
+    @DeleteMapping("/{chatRecordId}")
     public MessageModel<Object> removeChatRecord(@PathVariable Integer chatRecordId){
         chatService.deleteChatRecord(chatRecordId);
 
@@ -67,7 +67,7 @@ public class ChatController {
     }
 
     @ApiOperation("设置一条聊天记录为已读")
-    @PostMapping("/chatRecordId/{chatRecordId}")
+    @PostMapping("/setRead/{chatRecordId}")
     public MessageModel<Object> setChatRecordRead(@PathVariable Integer chatRecordId) {
 
         chatService.chatRecordIsRead(chatRecordId);

@@ -19,7 +19,7 @@ public interface TweetService {
 
     /**
      * 递归查询动态和它下面的所有评论
-     * 以及评论的评论，评论的评论最多五条
+     * 以及评论的评论，
      * 按照某种规律排序
      * @param tweetId
      * @return

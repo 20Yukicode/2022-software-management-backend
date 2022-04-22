@@ -11,11 +11,13 @@ import com.campus.love.user.entity.Subscribed;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.service.SubscribedService;
 import com.campus.love.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 

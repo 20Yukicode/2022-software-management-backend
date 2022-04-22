@@ -11,7 +11,7 @@
  Target Server Version : 80027
  File Encoding         : 65001
 
- Date: 20/04/2022 13:06:29
+ Date: 21/04/2022 23:34:07
 */
 
 SET NAMES utf8mb4;
@@ -131,7 +131,6 @@ CREATE TABLE `report`  (
 DROP TABLE IF EXISTS `subscribed`;
 CREATE TABLE `subscribed`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Id',
-  `is_subscibed` int NULL DEFAULT NULL COMMENT '是否关注',
   `first_user_id` int NULL DEFAULT NULL COMMENT '关注者A',
   `second_user_id` int NULL DEFAULT NULL COMMENT '关注者B',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
@@ -178,7 +177,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '用户Id',
   `nickname` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '昵称',
-  `openPid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '统一身份认证信息',
+  `open_pid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '统一身份认证信息',
   `gender` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '性别',
   `state` int NULL DEFAULT NULL COMMENT '0-单身\r\n0单身，1-恋爱',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '现住地',
@@ -194,7 +193,8 @@ CREATE TABLE `user`  (
   `photo_album` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '相册（数组）',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `login_state` int NULL DEFAULT NULL COMMENT '登录状态（0-未登录，1-已登录）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

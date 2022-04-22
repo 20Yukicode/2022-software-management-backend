@@ -1,18 +1,23 @@
 package com.campus.love.tweet.service.impl;
 
+import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.tweet.domain.bo.CommentBo;
+import com.campus.love.tweet.domain.constant.ChangeType;
 import com.campus.love.tweet.domain.enums.Order;
 import com.campus.love.tweet.domain.enums.Operator;
 import com.campus.love.tweet.domain.enums.OperatorType;
 import com.campus.love.tweet.domain.vo.AddCommentVo;
-import com.campus.love.tweet.domain.vo.AddVo;
 import com.campus.love.tweet.domain.vo.CommentTreeNodeVo;
 import com.campus.love.tweet.entity.Comment;
+import com.campus.love.tweet.entity.Tweet;
 import com.campus.love.tweet.manage.CommentManage;
 import com.campus.love.tweet.mapper.CommentMapper;
+import com.campus.love.tweet.mapper.TweetMapper;
 import com.campus.love.tweet.service.CommentService;
+import com.campus.love.common.core.util.SynchronizedByKey;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +29,15 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
 
     private final CommentMapper commentMapper;
 
-    public CommentServiceImpl1(CommentManage commentManage, CommentMapper commentMapper) {
+    private final TweetMapper tweetMapper;
+
+    private final SynchronizedByKey<Operator> synchronizedByKey;
+
+    public CommentServiceImpl1(CommentManage commentManage, CommentMapper commentMapper, TweetMapper tweetMapper, SynchronizedByKey<Operator> synchronizedByKey) {
         this.commentManage = commentManage;
         this.commentMapper = commentMapper;
+        this.tweetMapper = tweetMapper;
+        this.synchronizedByKey = synchronizedByKey;
     }
 
     //找到某条评论下的所有子评论（直接回复或者间接回复）
@@ -64,6 +75,28 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
         return node;
     }
 
+    public void changeCommentNum(Integer operatorId,OperatorType operatorType,Integer num) {
+        switch (operatorType) {
+            case TWEET:
+                Tweet tweet = tweetMapper.selectById(operatorId);
+
+                tweet.setCommentNum(tweet.getCommentNum() + num);
+                tweetMapper.updateById(tweet);
+                break;
+
+            case COMMENT:
+                Comment comment = commentMapper.selectById(operatorId);
+
+                comment.setCommentNum(comment.getCommentNum() + num);
+                commentMapper.updateById(comment);
+                break;
+
+            default:
+                AssertUtil.failed("不是动态或评论");
+        }
+    }
+
+    @Transactional(rollbackFor = ApiException.class)
     @Override
     public void insertComment(AddCommentVo addVo) {
         Comment.CommentBuilder builder = Comment.builder();
@@ -72,20 +105,27 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
                 .commentNum(0)
                 .userId(addVo.getUserId());
         Operator operator = addVo.getOperator();
-        if (operator.getOperatorType().equals(OperatorType.TWEET)) {
-            builder.pTweetId(operator.getOperatorId());
-        } else if (operator.getOperatorType().equals(OperatorType.COMMENT)) {
-            builder.pCommentId(operator.getOperatorId());
-        } else {
-            AssertUtil.failed("不是合法的回复类型");
-        }
-        int insert = commentMapper.insert(builder.build());
-        AssertUtil.failed(() -> insert == 0, "插入评论失败");
+        Integer operatorId = operator.getOperatorId();
+        OperatorType operatorType = operator.getOperatorType();
+
+        synchronizedByKey.exec(operator,()->{
+            int insert = commentMapper.insert(builder.build());
+            AssertUtil.failed(() -> insert == 0, "插入评论失败");
+            changeCommentNum(operatorId, operatorType, ChangeType.ADD);
+        });
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     @Override
-    public void deleteComment(Integer commentId) {
-        int i = commentMapper.deleteById(commentId);
-        AssertUtil.failed(() -> i != 1, "删除评论失败");
+    public void deleteComment(Integer commentId,Operator operator) {
+        Integer operatorId = operator.getOperatorId();
+        OperatorType operatorType = operator.getOperatorType();
+
+        //todo 这里要加锁
+        synchronizedByKey.exec(operator, () -> {
+            int i = commentMapper.deleteById(commentId);
+            AssertUtil.failed(() -> i != 1, "删除评论失败");
+            changeCommentNum(operatorId, operatorType, ChangeType.SUB);
+        });
     }
 }

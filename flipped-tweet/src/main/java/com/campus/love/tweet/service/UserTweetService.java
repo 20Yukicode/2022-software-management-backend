@@ -1,5 +1,6 @@
 package com.campus.love.tweet.service;
 
+import com.campus.love.tweet.domain.vo.PostTweetVo;
 import com.campus.love.tweet.entity.Tweet;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,9 +10,9 @@ public interface UserTweetService {
 
     List<Tweet> getTweets(Integer userId);
 
-    Integer addTweet(List<MultipartFile> files, String topic, String content, Integer userId);
+    void addTweet(PostTweetVo tweetVo);
 
-    void changeTweet(Tweet tweet);
+    void changeTweet(PostTweetVo tweetVo);
 
     void deleteTweet(Integer tweetId);
 

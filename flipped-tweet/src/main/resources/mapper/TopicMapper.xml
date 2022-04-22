@@ -7,16 +7,15 @@
     <resultMap id="BaseResultMap" type="com.campus.love.tweet.entity.Topic">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="heading" column="heading" jdbcType="VARCHAR"/>
-            <result property="participants" column="participants" jdbcType="VARCHAR"/>
+            <result property="participants" column="participants" jdbcType="INTEGER"/>
             <result property="tweetNum" column="tweet_num" jdbcType="INTEGER"/>
-            <result property="introduction" column="introduction" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,heading,participants,
-        tweet_num,introduction,create_time,
+        tweet_num,create_time,
         update_time
     </sql>
 </mapper>

@@ -32,7 +32,7 @@ public class Topic extends BaseEntity {
      * 参与人数
      */
     @ApiModelProperty("参与人数")
-    private String participants;
+    private Integer participants;
 
     /**
      * 动态数
@@ -40,11 +40,6 @@ public class Topic extends BaseEntity {
     @ApiModelProperty("动态数")
     private Integer tweetNum;
 
-    /**
-     * 话题介绍
-     */
-    @ApiModelProperty("话题介绍")
-    private String introduction;
 
 
     @TableField(exist = false)
