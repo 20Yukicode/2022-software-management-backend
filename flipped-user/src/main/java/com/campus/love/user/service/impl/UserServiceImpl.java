@@ -2,18 +2,13 @@ package com.campus.love.user.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.cloud.commons.lang.StringUtils;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.campus.love.common.core.api.MessageModel;
-import com.campus.love.common.core.api.ResultCode;
 import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.core.util.FileUtil;
 import com.campus.love.common.core.util.LoginUtil;
-import com.campus.love.user.entity.Criteria;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.mapper.SubscribedMapper;
 import com.campus.love.user.mapper.UserMapper;

@@ -1,6 +1,7 @@
 package com.campus.love.common.core.log;
 
-import com.alibaba.fastjson.JSON;
+
+import com.alibaba.fastjson2.JSON;
 import com.campus.love.common.core.domain.WebLog;
 import com.campus.love.common.core.util.HttpUtil;
 import io.swagger.annotations.ApiOperation;
@@ -50,7 +51,7 @@ public class LogAspect {
                 .result(proceed)
                 .build();
         //后续要转为ELK
-        log.info("日志记录"+JSON.toJSONString(webLog));
+        log.info("日志记录"+ JSON.toJSONString(webLog));
         return proceed;
     }
 
