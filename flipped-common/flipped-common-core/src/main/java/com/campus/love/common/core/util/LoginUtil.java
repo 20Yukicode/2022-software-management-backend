@@ -1,17 +1,11 @@
 package com.campus.love.common.core.util;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.campus.love.common.core.entity.AccessToken;
-import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.dto.SessionDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -32,9 +26,9 @@ public class LoginUtil {
                 AccessToken.getAppID()+"&secret="+AccessToken.getAppSecret()+"&js_code="+code+
                 "&grant_type=authorization_code",String.class);
 
-        JSONObject json = JSONObject.parseObject(response);
+        SessionDto session = JSONObject.parseObject(response,SessionDto.class);
 
-        SessionDto session = JSON.toJavaObject(json, SessionDto.class);
+        //SessionDto session = JSON.toJavaObject(json, SessionDto.class);
 
         log.info("session:"+session.toString());
 
