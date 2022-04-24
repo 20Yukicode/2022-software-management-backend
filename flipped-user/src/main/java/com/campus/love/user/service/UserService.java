@@ -27,8 +27,11 @@ public interface UserService {
 
     int updateUserInfo(User user);
 
+    List<String> getAlbum(Integer id);
+
     List<String> insertAlbum(Integer id, List<MultipartFile> files);
 
+    List<String> deleteAlbum(Integer id, Integer nums);
 
 
 

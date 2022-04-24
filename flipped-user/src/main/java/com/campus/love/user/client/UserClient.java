@@ -3,6 +3,7 @@ package com.campus.love.user.client;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.campus.love.common.core.api.MessageModel;
+import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.feign.domain.FeignConstant;
 import com.campus.love.common.feign.module.user.UserFeignClient;
 import com.campus.love.common.feign.module.user.dto.SubscribedUserDto;
@@ -63,6 +64,7 @@ public class UserClient implements UserFeignClient {
                     .build();
             return MessageModel.success(userInfoDto);
         }
+        AssertUtil.failed("用户不存咋");
         return MessageModel.failed("用户不存在");
     }
 

@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -143,6 +145,23 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 获取用户相册
+     * @param id
+     * @return
+     */
+    @Override
+    public List<String> getAlbum(Integer id) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            AssertUtil.failed("找不到该用户");
+            return null;
+        }
+        String photoAlbum = user.getPhotoAlbum();
+        List filUrlList = Arrays.asList(photoAlbum.split(","));
+        return filUrlList;
+    }
+
+    /**
      * 相册插入图片
      * @param id 用户id
      * @param files 图片文件列表
@@ -150,12 +169,56 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<String> insertAlbum(Integer id, List<MultipartFile> files) {
-//        User user = userMapper.selectById(id);
-//        if (user == null) {
-//            AssertUtil.failed("找不到该用户");
-//            return null;
-//        }
-        return null;
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            AssertUtil.failed("找不到该用户");
+            return null;
+        }
+        String fileBasePath = USER_PATH + "/" + id + "/" + ALBUM_PATH + "/";
+        List<String> fileUrlList = files.stream()
+                .map(item -> FileUtil.saveFile(fileBasePath + item.getOriginalFilename(), item))
+                .collect(Collectors.toList());
+        String oldAlbum = StringUtils.isEmpty(user.getPhotoAlbum()) ? "" : user.getPhotoAlbum() + "/";
+        String newAlbum = oldAlbum + String.join(",", fileUrlList);
+        user.setPhotoAlbum(newAlbum);
+        userMapper.updateById(user);
+        return fileUrlList;
+    }
+
+    /**
+     * 删除相册中的指定图片
+     * @param id 用户id
+     * @param nums 删除图片的序号列表
+     */
+    @Override
+    public List<String> deleteAlbum(Integer id, Integer nums) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            AssertUtil.failed("找不到该用户");
+            return null;
+        }
+        List<String> album = Arrays.asList(user.getPhotoAlbum().split(","));
+        StringBuffer newAlbum = new StringBuffer();
+        for (int i = 0; i < album.size(); ++i) {
+            if (nums == i) {
+                String[] value = album.get(i).split(BASE_PATH+"/");
+                if (value.length > 1) {
+                    FileUtil.deleteFile(value[1]);
+                }
+            }
+            else {
+                if (newAlbum.length() == 0) {
+                    newAlbum.append(album.get(i));
+                }
+                else {
+                    newAlbum.append(",");
+                    newAlbum.append(album.get(i));
+                }
+            }
+        }
+        user.setPhotoAlbum(newAlbum.toString());
+        userMapper.updateById(user);
+        return Arrays.asList(user.getPhotoAlbum().split(","));
     }
 
 }

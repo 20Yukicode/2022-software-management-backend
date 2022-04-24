@@ -7,6 +7,7 @@ import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.user.dto.UserDto;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.service.UserService;
+import io.swagger.models.auth.In;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -113,13 +114,13 @@ public class UserController {
         return MessageModel.success(userService.getOneById(id));
     }
 
-    @GetMapping("/subscribed/userId/{id}")
+    @GetMapping("/userId/{id}/subscribed")
     public MessageModel<List<String>> querySubscribedById(@PathVariable Integer id) {
 
         return MessageModel.success(userService.getSubscribedById(id));
     }
 
-    @PostMapping("/avatar/userId/{id}")
+    @PostMapping("/userId/{id}/avatar")
     public MessageModel<String> alterAvatar(@PathVariable Integer id,
                                                           @RequestPart("file") MultipartFile file) {
 
@@ -130,5 +131,28 @@ public class UserController {
     public MessageModel<Integer> alterUserInfo(@RequestBody User user) {
 
         return MessageModel.success(userService.updateUserInfo(user));
+    }
+
+    @GetMapping("/userId/{id}/album")
+    public MessageModel<List<String>> queryAlbum(@PathVariable Integer id) {
+
+        List<String> fileUrlList = userService.getAlbum(id);
+        return fileUrlList == null ? MessageModel.failed("获取失败") : MessageModel.success(fileUrlList);
+    }
+
+    @PostMapping("/userId/{id}/album")
+    public MessageModel<List<String>> addAlum(@PathVariable Integer id,
+                                            @RequestPart("files") List<MultipartFile> files) {
+
+        List<String> fileUrlList = userService.insertAlbum(id, files);
+        return fileUrlList == null ? MessageModel.failed("插入失败") : MessageModel.success("插入成功",fileUrlList);
+    }
+
+    @DeleteMapping("/userId/{id}/album")
+    public MessageModel removeAlum(@PathVariable Integer id,
+                                              @RequestParam("nums") Integer nums) {
+
+        List<String> fileUrlList = userService.deleteAlbum(id, nums);
+        return fileUrlList == null ? MessageModel.failed("删除失败") : MessageModel.success("删除成功",fileUrlList);
     }
 }
