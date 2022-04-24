@@ -1,10 +1,8 @@
 package com.campus.love.user.client;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.util.AssertUtil;
-import com.campus.love.common.feign.domain.FeignConstant;
 import com.campus.love.common.feign.module.user.UserFeignClient;
 import com.campus.love.common.feign.module.user.dto.SubscribedUserDto;
 import com.campus.love.common.feign.module.user.dto.UserInfoDto;
@@ -12,13 +10,9 @@ import com.campus.love.user.entity.Subscribed;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.service.SubscribedService;
 import com.campus.love.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +32,14 @@ public class UserClient implements UserFeignClient {
     @Override
     //@GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX + "/subscribed")
     public MessageModel<List<SubscribedUserDto>> querySubscribedInfo(@RequestParam("userId") Integer userId) {
-        List<Subscribed> subscribedList = subscribedService.getSubscribedList(userId);
+        List<Subscribed> subscribedList;
+        try {
+            subscribedList = subscribedService.getSubscribedList(userId);
+        } catch (AssertionError e) {
+            e.printStackTrace();
+            return MessageModel.failed("用户不存在");
+        }
+
         List<SubscribedUserDto> userList = subscribedList.stream()
                 .map(item -> {
                     User subscribedUser = userService.getOneById(item.getSecondUserId());
