@@ -1,6 +1,7 @@
 package com.campus.love.common.core.util;
 
-import com.alibaba.fastjson.JSONObject;
+
+import com.alibaba.fastjson2.JSON;
 import com.campus.love.common.core.api.IErrorCode;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.api.ResultCode;
@@ -19,7 +20,7 @@ public class InterceptorUtil {
         //response.setHeader("Access-Control-Allow-Origin", HttpContextUtil.getOrigin());
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=utf-8");
-        String json = JSONObject.toJSONString(MessageModel.failed(code));
+        String json = JSON.toJSONString(MessageModel.failed(code));
         response.getWriter().print(json);
     }
 }
