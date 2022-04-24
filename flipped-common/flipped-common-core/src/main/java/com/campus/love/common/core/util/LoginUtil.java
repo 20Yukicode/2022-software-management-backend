@@ -1,7 +1,6 @@
 package com.campus.love.common.core.util;
 
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.campus.love.common.core.entity.AccessToken;
 import com.campus.love.common.core.util.dto.SessionDto;
@@ -30,6 +29,7 @@ public class LoginUtil {
 
         //SessionDto session = JSON.toJavaObject(json, SessionDto.class);
 
+        log.info("response:{}"+response);
         log.info("session:"+session.toString());
 
         return session;

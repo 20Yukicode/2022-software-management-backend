@@ -7,7 +7,7 @@ public class SessionDto {
     /**
      * 用户唯一标识
      */
-    private String openId;
+    private String openid;
 
     /**
      * 会话密钥
@@ -17,7 +17,7 @@ public class SessionDto {
     /**
      * 用户在开放平台的唯一标识符
      */
-    private String unionId;
+    private String unionid;
 
     /**
      * 错误码
@@ -27,12 +27,12 @@ public class SessionDto {
     /**
      * 错误信息
      */
-    private String errMsg;
+    private String errmsg;
 
     @Override
     public String toString(){
-        return "{openId: " + openId + "\nsession_key: " + session_key + "\nunionId: " + unionId + "\nnumber: "
-                + number + "\nerrMsg:" + errMsg + "}";
+        return "{openId: " + openid + "\nsession_key: " + session_key + "\nunionId: " + unionid + "\nnumber: "
+                + number + "\nerrMsg:" + errmsg + "}";
     }
 
 }

@@ -64,6 +64,9 @@ public class UserController {
             //判断是否已经注册
             User user = userService.getOneByPid(openPid);
 
+            if (StringUtils.isEmpty(openPid)) {
+                return MessageModel.failed("无效code");
+            }
             //未注册
             if (user == null) {
                 // to be continued
