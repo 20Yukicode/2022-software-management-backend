@@ -13,6 +13,7 @@ import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.core.util.FileUtil;
 import com.campus.love.common.core.util.LoginUtil;
+import com.campus.love.common.core.util.dto.SessionDto;
 import com.campus.love.user.entity.Criteria;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.mapper.SubscribedMapper;
@@ -49,7 +50,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @GetMapping("login")
     public String login(String code) throws ApiException{
-        return LoginUtil.getPluginOpenPId(code);
+        SessionDto session = LoginUtil.code2Session(code);
+        return session.getOpenId();
+
     }
 
     @Override
@@ -61,7 +64,6 @@ public class UserServiceImpl implements UserService {
         //设置登陆状态
         user.setLoginState(0);
         userMapper.updateById(user);
-        StpUtil.logout(userId);
     }
 
     @Override
@@ -94,11 +96,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getOneByPid(String pid) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("openPid",pid);
+        wrapper.eq("open_pid",pid);
         User user = userMapper.selectOne(wrapper);
-        if (user == null) {
-            AssertUtil.failed("找不到该用户");
-        }
         return user;
     }
 

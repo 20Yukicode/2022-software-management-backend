@@ -1,7 +1,10 @@
 package com.campus.love.user.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.druid.util.StringUtils;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.exception.ApiException;
+import com.campus.love.user.dto.UserDto;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +22,60 @@ public class UserController {
         this.userService =userService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/register")
+    public MessageModel register(@RequestBody UserDto userDto){
+        if (StringUtils.isEmpty(userDto.getOpenPid())) {
+            return MessageModel.failed("openPid错误");
+        }
+        User user = userService.getOneByPid(userDto.getOpenPid());
+        //用户未注册
+        if (user == null) {
+            user = new User();
+            user.setAvatar(userDto.getAvatarUrl());
+            user.setNickname(StringUtils.isEmpty(userDto.getNickName()) ? "" : userDto.getNickName());
+            user.setOpenPid(userDto.getOpenPid());
+            user.setLoginState(1);
+            userService.insertUser(user);
+            if (user.getId() > 0) {
+                StpUtil.login(user.getId());
+                return MessageModel.success("注册成功",user);
+            }
+            else {
+                return MessageModel.failed("注册失败");
+            }
+        }
+        //用户已注册
+        else {
+            //更改登陆状态
+            user.setLoginState(1);
+            userService.updateUserInfo(user);
+            StpUtil.login(user.getId());
+            return MessageModel.success("成功登录", user);
+        }
+
+    }
+
+    @GetMapping("/login")
     public MessageModel login(@RequestParam("code") String code) {
         try {
-            //先获取openpid，再判断pid是否已经注册，若是，则直接登录，否则需要注册
+            //先获取openPid，再判断pid是否已经注册，若是，则直接登录，否则需要注册
             String openPid = userService.login(code);
+
             //判断是否已经注册
             User user = userService.getOneByPid(openPid);
+
             //未注册
             if (user == null) {
                 // to be continued
-                return MessageModel.success("用户未注册", user.getId());
+                return MessageModel.success("用户未注册", openPid);
             }
             //已注册，判断登陆状态
             else if(user.getLoginState() == 0) {
+
                 return MessageModel.success("用户未登录", user.getId());
             }
             else {
+                StpUtil.login(user.getId());
                 return MessageModel.success("用户已登录", user.getId());
             }
         } catch (ApiException e) {
@@ -47,6 +87,7 @@ public class UserController {
     @PostMapping("/logout")
     public MessageModel<Object> logout(@RequestParam("userId") Integer  userId){
         userService.logout(userId);
+        StpUtil.logout(userId);
         return MessageModel.success();
     }
 
