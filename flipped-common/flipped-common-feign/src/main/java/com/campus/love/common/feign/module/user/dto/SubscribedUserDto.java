@@ -23,6 +23,6 @@ public class SubscribedUserDto {
     @ApiModelProperty("用户关注时间(距离现在的时间)")
     private Date createTime;
 
-    @ApiModelProperty("回关")
+    @ApiModelProperty("是否回关")
     private Boolean isFollow;
 }

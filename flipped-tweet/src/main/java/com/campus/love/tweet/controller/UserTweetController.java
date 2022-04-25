@@ -3,7 +3,7 @@ package com.campus.love.tweet.controller;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.tweet.domain.bo.CommentBo;
-import com.campus.love.tweet.domain.enums.Operator;
+import com.campus.love.tweet.enums.Operator;
 import com.campus.love.tweet.domain.vo.AddCommentVo;
 import com.campus.love.tweet.domain.vo.AddLikesVo;
 import com.campus.love.tweet.domain.vo.PostTweetVo;
@@ -12,10 +12,12 @@ import com.campus.love.tweet.service.CommentService;
 import com.campus.love.tweet.service.LikesService;
 import com.campus.love.tweet.service.UserTweetService;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserTweetController {
@@ -42,7 +44,8 @@ public class UserTweetController {
 
     @ApiOperation("发布动态")
     @PostMapping("/tweet/publish")
-    public MessageModel<Object> publishTweet(@RequestPart PostTweetVo postTweetVo) {
+    public MessageModel<Object> publishTweet(PostTweetVo postTweetVo) {
+        log.info(postTweetVo.toString());
         Integer userId = postTweetVo.getUserId();
 
         AssertUtil.ifNull(userId, "用户Id不能为空");
@@ -52,7 +55,7 @@ public class UserTweetController {
 
     @ApiOperation("修改动态")
     @PutMapping("/tweet")
-    public MessageModel<Object> modifyTweet(@RequestBody PostTweetVo tweet) {
+    public MessageModel<Object> modifyTweet(PostTweetVo tweet) {
         AssertUtil.validateNull(tweet.getTweetId(), "动态Id不难为空");
         userTweetService.changeTweet(tweet);
 

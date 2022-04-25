@@ -4,14 +4,14 @@ import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.tweet.domain.bo.CommentBo;
 import com.campus.love.tweet.domain.constant.ChangeType;
-import com.campus.love.tweet.domain.enums.Order;
-import com.campus.love.tweet.domain.enums.Operator;
-import com.campus.love.tweet.domain.enums.OperatorType;
+import com.campus.love.tweet.enums.Order;
+import com.campus.love.tweet.enums.Operator;
+import com.campus.love.tweet.enums.OperatorType;
 import com.campus.love.tweet.domain.vo.AddCommentVo;
 import com.campus.love.tweet.domain.vo.CommentTreeNodeVo;
 import com.campus.love.tweet.entity.Comment;
 import com.campus.love.tweet.entity.Tweet;
-import com.campus.love.tweet.manage.CommentManage;
+import com.campus.love.tweet.manager.CommentManager;
 import com.campus.love.tweet.mapper.CommentMapper;
 import com.campus.love.tweet.mapper.TweetMapper;
 import com.campus.love.tweet.service.CommentService;
@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 public class CommentServiceImpl1 implements CommentService<CommentBo> {
 
-    private final CommentManage commentManage;
+    private final CommentManager commentManager;
 
     private final CommentMapper commentMapper;
 
@@ -33,8 +33,8 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
 
     private final SynchronizedByKey<Operator> synchronizedByKey;
 
-    public CommentServiceImpl1(CommentManage commentManage, CommentMapper commentMapper, TweetMapper tweetMapper, SynchronizedByKey<Operator> synchronizedByKey) {
-        this.commentManage = commentManage;
+    public CommentServiceImpl1(CommentManager commentManager, CommentMapper commentMapper, TweetMapper tweetMapper, SynchronizedByKey<Operator> synchronizedByKey) {
+        this.commentManager = commentManager;
         this.commentMapper = commentMapper;
         this.tweetMapper = tweetMapper;
         this.synchronizedByKey = synchronizedByKey;
@@ -45,9 +45,9 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
         if (commentId == null) {
             return;
         }
-        commentManage.getAllChildComments(commentId)
+        commentManager.getAllChildComments(commentId)
                 .forEach(item -> {
-                    CommentBo commentBo = commentManage.commentToBo(item);
+                    CommentBo commentBo = commentManager.commentToBo(item);
                     list.add(commentBo);
                     recursive(list, item.getId());
                 });
@@ -58,9 +58,9 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
         if (commentId == null) {
             return null;
         }
-        Comment oneComment = commentManage.getOneComment(commentId);
+        Comment oneComment = commentManager.getOneComment(commentId);
 
-        CommentBo commentBo = commentManage.commentToBo(oneComment);
+        CommentBo commentBo = commentManager.commentToBo(oneComment);
         CommentTreeNodeVo<CommentBo> node =
                 new CommentTreeNodeVo<>(commentBo, null);
         List<CommentBo> list = new ArrayList<>();

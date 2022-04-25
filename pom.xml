@@ -140,6 +140,12 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.campus.love</groupId>
+                <artifactId>flipped-common-mq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!--mysql-->
             <dependency>
                 <groupId>mysql</groupId>

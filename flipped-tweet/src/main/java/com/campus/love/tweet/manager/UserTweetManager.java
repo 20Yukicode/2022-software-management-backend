@@ -1,7 +1,9 @@
-package com.campus.love.tweet.manage;
+package com.campus.love.tweet.manager;
 
+import com.campus.love.common.core.util.FileUtil;
 import com.campus.love.tweet.domain.vo.PostTweetVo;
 import com.campus.love.tweet.entity.Tweet;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,15 +12,18 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
-public class UserTweetManage {
+public class UserTweetManager {
 
     @Value("${prefix}")
     private String TWEET_PATH;
 
     private String generatorTweetPath(int userId,MultipartFile file) {
         LocalDate date = LocalDate.now();
-        return TWEET_PATH + "user/" + userId + "/tweet/" + date + "/" + file.getOriginalFilename();
+        String path = "user/" + userId + "/tweet/" + date + "/" + file.getOriginalFilename();
+        FileUtil.saveFile(path, file);
+        return TWEET_PATH + "/"+path;
     }
 
     public Tweet postVo2tweet(PostTweetVo tweetVo) {
@@ -35,8 +40,7 @@ public class UserTweetManage {
         }
         List<MultipartFile> files = tweetVo.getFiles();
 
-
-        if(files!=null&&files.size()!=0) {
+        if (files != null && files.size() != 0) {
             String collect = files.stream()
                     .map(item -> generatorTweetPath(tweetVo.getUserId(), item))
                     .collect(Collectors.joining(","));

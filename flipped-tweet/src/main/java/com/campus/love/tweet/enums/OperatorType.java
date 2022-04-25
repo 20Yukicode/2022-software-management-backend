@@ -1,4 +1,4 @@
-package com.campus.love.tweet.domain.enums;
+package com.campus.love.tweet.enums;
 
 import lombok.Getter;
 

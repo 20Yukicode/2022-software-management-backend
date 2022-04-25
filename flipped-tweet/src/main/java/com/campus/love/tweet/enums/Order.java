@@ -1,4 +1,4 @@
-package com.campus.love.tweet.domain.enums;
+package com.campus.love.tweet.enums;
 
 public enum Order {
     TIME_DESC(1, "按照时间降序"),

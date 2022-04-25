@@ -1,4 +1,4 @@
-package com.campus.love.tweet.manage;
+package com.campus.love.tweet.manager;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.common.core.api.MessageModel;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class CommentManage {
+public class CommentManager {
 
     private final CommentMapper commentMapper;
 
@@ -23,7 +23,7 @@ public class CommentManage {
 
     private final UserFeignClient userFeignClient;
 
-    public CommentManage(CommentMapper commentMapper, TweetMapper tweetMapper, UserFeignClient userFeignClient) {
+    public CommentManager(CommentMapper commentMapper, TweetMapper tweetMapper, UserFeignClient userFeignClient) {
         this.commentMapper = commentMapper;
         this.tweetMapper = tweetMapper;
         this.userFeignClient = userFeignClient;

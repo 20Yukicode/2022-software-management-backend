@@ -1,6 +1,6 @@
 package com.campus.love.tweet.domain.vo;
 
-import com.campus.love.tweet.domain.enums.Operator;
+import com.campus.love.tweet.enums.Operator;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

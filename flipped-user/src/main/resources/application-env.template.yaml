@@ -8,3 +8,9 @@ spring:
     url: yours url
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+  rabbitmq:
+    host: yours host
+    port: 0000
+    username: your name
+    password: yours password
+    virtual-host: yours virtual-host

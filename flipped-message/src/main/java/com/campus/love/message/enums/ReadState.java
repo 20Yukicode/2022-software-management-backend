@@ -1,4 +1,4 @@
-package com.campus.love.message.domain.enums;
+package com.campus.love.message.enums;
 
 public enum ReadState {
 

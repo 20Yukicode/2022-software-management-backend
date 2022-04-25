@@ -44,6 +44,7 @@ public class ChatRecord extends BaseEntity {
     private String content;
 
     /**
+     * 是否已被接收者读了
      * 0-未读，1-已读
      */
     @ApiModelProperty("消息是否已读")

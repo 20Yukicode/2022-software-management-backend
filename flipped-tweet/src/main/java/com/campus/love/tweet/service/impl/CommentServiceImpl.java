@@ -1,13 +1,13 @@
 package com.campus.love.tweet.service.impl;
 
-import com.campus.love.tweet.domain.enums.Operator;
-import com.campus.love.tweet.domain.enums.Order;
+import com.campus.love.tweet.enums.Operator;
+import com.campus.love.tweet.enums.Order;
 import com.campus.love.tweet.domain.vo.AddCommentVo;
 import com.campus.love.tweet.domain.vo.CommentTreeNodeVo;
 import com.campus.love.tweet.domain.bo.CommentBo;
 import com.campus.love.tweet.entity.Comment;
-import com.campus.love.tweet.manage.CommentManage;
-import com.campus.love.tweet.manage.TweetManage;
+import com.campus.love.tweet.manager.CommentManager;
+import com.campus.love.tweet.manager.TweetManager;
 import com.campus.love.tweet.service.CommentService;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +17,13 @@ import java.util.List;
 @Service
 public class CommentServiceImpl implements CommentService<CommentTreeNodeVo> {
 
-    private final CommentManage commentManage;
+    private final CommentManager commentManager;
 
-    private final TweetManage tweetManage;
+    private final TweetManager tweetManager;
 
-    public CommentServiceImpl( CommentManage commentManage, TweetManage tweetManage) {
-        this.commentManage = commentManage;
-        this.tweetManage = tweetManage;
+    public CommentServiceImpl(CommentManager commentManager, TweetManager tweetManager) {
+        this.commentManager = commentManager;
+        this.tweetManager = tweetManager;
     }
 
 
@@ -31,14 +31,14 @@ public class CommentServiceImpl implements CommentService<CommentTreeNodeVo> {
         if (commentId == null) {
             return null;
         }
-        Comment oneComment = commentManage.getOneComment(commentId);
+        Comment oneComment = commentManager.getOneComment(commentId);
 
-        CommentBo commentBo = commentManage.commentToBo(oneComment);
+        CommentBo commentBo = commentManager.commentToBo(oneComment);
         CommentTreeNodeVo<CommentTreeNodeVo<?>> node =
                 new CommentTreeNodeVo<>(commentBo, null);
         List<CommentTreeNodeVo<?>> list = new ArrayList<>();
 
-        commentManage.getAllChildComments(commentId)
+        commentManager.getAllChildComments(commentId)
                 .forEach(item -> {
                     CommentTreeNodeVo<CommentTreeNodeVo> comments =
                             recursive(item.getId());

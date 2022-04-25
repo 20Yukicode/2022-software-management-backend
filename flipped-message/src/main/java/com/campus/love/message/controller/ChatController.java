@@ -1,15 +1,11 @@
 package com.campus.love.message.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.message.domain.bo.ChatRecordBo;
-import com.campus.love.message.domain.vo.ChatRecordVo;
 import com.campus.love.message.entity.ChatRecord;
 import com.campus.love.message.service.ChatService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,19 +31,15 @@ public class ChatController {
         return MessageModel.success(chatRecords);
     }
 
-    @ApiOperation("查找两个人的聊天记录")
-    @GetMapping("")
-    public MessageModel<Page<ChatRecord>> queryChatRecords(@RequestBody @Validated ChatRecordVo chatRecordVo) {
-        log.info(chatRecordVo.toString());
+    @ApiOperation("查找两个人聊天记录")
+    @GetMapping("/{userAId}/{userBId}")
+    public MessageModel<ChatRecordBo> queryTwoUserChatRecords(@PathVariable Integer userAId,
+                                                              @PathVariable Integer userBId) {
 
-        Integer userAId = chatRecordVo.getUserAId();
-        Integer userBId = chatRecordVo.getUserBId();
-
-        Integer pageNum = chatRecordVo.getPageNum();
-        Integer pageSize = chatRecordVo.getPageSize();
-
-        return MessageModel.success(chatService.getAUserAllChatRecords(userAId, userBId, pageNum, pageSize));
+        ChatRecordBo twoUserChatRecords = chatService.getTwoUserChatRecords(userAId, userBId);
+        return MessageModel.success(twoUserChatRecords);
     }
+
 
     @ApiOperation("添加一条聊天记录")
     @PostMapping("")

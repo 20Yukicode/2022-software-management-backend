@@ -2,7 +2,7 @@ package com.campus.love.tweet.controller;
 
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.tweet.domain.bo.CommentBo;
-import com.campus.love.tweet.domain.enums.Order;
+import com.campus.love.tweet.enums.Order;
 import com.campus.love.tweet.domain.vo.CommentTreeNodeVo;
 import com.campus.love.tweet.domain.vo.TweetVo;
 import com.campus.love.tweet.service.CommentService;

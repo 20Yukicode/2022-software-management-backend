@@ -10,8 +10,7 @@ import java.util.List;
 
 public interface ChatService {
 
-    Page<ChatRecord> getAUserAllChatRecords(Integer userAId, Integer userBId, Integer pageNum, Integer pageSize);
-
+    ChatRecordBo getTwoUserChatRecords(Integer userAId,Integer userBId);
     /**
      * 插入聊天记录
      * @param oneChatRecord

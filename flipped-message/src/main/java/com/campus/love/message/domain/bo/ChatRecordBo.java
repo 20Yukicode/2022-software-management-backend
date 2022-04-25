@@ -1,5 +1,6 @@
 package com.campus.love.message.domain.bo;
 
+import com.campus.love.message.entity.ChatRecord;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -26,5 +27,5 @@ public class ChatRecordBo {
     private String userBAvatar;
 
     @ApiModelProperty("用户之间聊天记录")
-    private List<UserChatRecordBo> userChatRecordBoList;
+    private List<ChatRecord> userChatRecordBoList;
 }

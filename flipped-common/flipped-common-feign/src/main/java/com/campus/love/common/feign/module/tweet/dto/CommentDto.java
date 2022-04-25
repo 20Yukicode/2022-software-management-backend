@@ -18,12 +18,15 @@ public class CommentDto {
     @ApiModelProperty("评论用户名字")
     private Integer name;
 
+    @ApiModelProperty("评论用户头像")
+    private String avatar;
+
     @ApiModelProperty("评论内容")
     private String content;
 
     @ApiModelProperty("用户评论时间(距离现在的时间)")
     private Date createTime;
 
-    @ApiModelProperty("相关动态页面Url")
-    private String url;
+    @ApiModelProperty("相关动态id")
+    private Integer tweetId;
 }

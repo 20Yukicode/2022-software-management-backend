@@ -1,42 +1,44 @@
 package com.campus.love.message.controller;
 
 import com.campus.love.common.core.api.MessageModel;
-import com.campus.love.common.feign.module.demo.DemoFeignClient;
 import com.campus.love.common.feign.module.tweet.TweetFeignClient;
+import com.campus.love.common.feign.module.user.UserFeignClient;
+import com.campus.love.common.feign.module.user.dto.SubscribedUserDto;
+import com.campus.love.message.service.notice.SubscribedService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/notice")
 @Slf4j
 public class NoticeController {
 
-    private final DemoFeignClient demoFeignClient;
-
     private final TweetFeignClient tweetFeignClient;
 
-    public NoticeController(DemoFeignClient demoFeignClient, TweetFeignClient tweetFeignClient) {
-        this.demoFeignClient = demoFeignClient;
+    private final SubscribedService subscribedService;
+
+    public NoticeController(TweetFeignClient tweetFeignClient,  SubscribedService subscribedService) {
         this.tweetFeignClient = tweetFeignClient;
+        this.subscribedService = subscribedService;
     }
 
-    @GetMapping("")
-    public MessageModel<String> notice() {
-        Integer id = 5;
-        var data = demoFeignClient.demoTest(id);
-        String data1 = data.getData();
-        log.info(data.toString());
-        return MessageModel.success(data1);
+    @ApiOperation("获取历史关注信息")
+    @GetMapping("/{userId}/subscribed")
+    public MessageModel<List<SubscribedUserDto>> getSubscribedList(@PathVariable Integer userId) {
+        List<SubscribedUserDto> subscribedList = subscribedService.getSubscribedList(userId);
+
+        return MessageModel.success(subscribedList);
     }
 
-
-    @PostMapping("")
-    public MessageModel notices(){
+    @ApiOperation("设置消息已读")
+    @PostMapping("/{userId}/noticeRead")
+    public MessageModel<Object> setNoticeRead(@PathVariable Integer userId){
         return null;
     }
+
 
 
 

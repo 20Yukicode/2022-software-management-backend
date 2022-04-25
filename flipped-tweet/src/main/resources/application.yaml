@@ -1,4 +1,9 @@
 mybatis-plus:
   mapper-locations:
     - mapper/**/*.xml
-
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2000MB  #单个文件最大大小
+      max-request-size: 6000MB #上传数据总大小

@@ -3,32 +3,31 @@ package com.campus.love.tweet.service.impl;
 import com.campus.love.common.core.util.SplitUtil;
 import com.campus.love.tweet.domain.bo.CommentBo;
 import com.campus.love.tweet.domain.bo.TweetBo;
-import com.campus.love.tweet.domain.enums.Order;
+import com.campus.love.tweet.enums.Order;
 import com.campus.love.tweet.domain.vo.CommentTreeNodeVo;
 import com.campus.love.tweet.domain.vo.TweetVo;
 import com.campus.love.tweet.entity.Comment;
 import com.campus.love.tweet.entity.Tweet;
-import com.campus.love.tweet.manage.CommentManage;
-import com.campus.love.tweet.manage.TweetManage;
+import com.campus.love.tweet.manager.CommentManager;
+import com.campus.love.tweet.manager.TweetManager;
 import com.campus.love.tweet.service.TweetService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class TweetServiceImpl implements TweetService {
 
-    private final TweetManage tweetManage;
+    private final TweetManager tweetManager;
 
-    private final CommentManage commentManage;
+    private final CommentManager commentManager;
 
     private final CommentServiceImpl1 commentService;
 
-    public TweetServiceImpl(TweetManage tweetManage, CommentManage commentManage, CommentServiceImpl1 commentService) {
-        this.tweetManage = tweetManage;
-        this.commentManage = commentManage;
+    public TweetServiceImpl(TweetManager tweetManager, CommentManager commentManager, CommentServiceImpl1 commentService) {
+        this.tweetManager = tweetManager;
+        this.commentManager = commentManager;
         this.commentService = commentService;
     }
 
@@ -55,12 +54,12 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public TweetVo<CommentBo> getCommentsByTweet(Integer tweetId) {
-        List<Comment> commentsByTweet = tweetManage.getCommentsByTweet(tweetId);
-        Tweet tweet = tweetManage.getOneTweet(tweetId);
+        List<Comment> commentsByTweet = tweetManager.getCommentsByTweet(tweetId);
+        Tweet tweet = tweetManager.getOneTweet(tweetId);
         //转换成commentBo
         List<CommentBo> collect = commentsByTweet
                 .parallelStream()
-                .map(commentManage::commentToBo)
+                .map(commentManager::commentToBo)
                 .collect(Collectors.toList());
         return transferToVo(tweet, collect);
     }
@@ -68,9 +67,9 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public TweetVo<CommentTreeNodeVo<CommentBo>> getAllCommentsByTweet(Integer tweetId, Order order) {
-        List<Comment> commentsByTweet = tweetManage.getCommentsByTweet(tweetId);
+        List<Comment> commentsByTweet = tweetManager.getCommentsByTweet(tweetId);
 
-        Tweet tweet = tweetManage.getOneTweet(tweetId);
+        Tweet tweet = tweetManager.getOneTweet(tweetId);
 
         List<CommentTreeNodeVo<CommentBo>> collect = commentsByTweet
                 .stream()

@@ -1,7 +1,7 @@
 package com.campus.love.tweet.service;
 
 
-import com.campus.love.tweet.domain.enums.Operator;
+import com.campus.love.tweet.enums.Operator;
 import com.campus.love.tweet.domain.vo.AddLikesVo;
 
 public interface LikesService {

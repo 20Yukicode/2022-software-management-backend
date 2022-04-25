@@ -1,4 +1,4 @@
-package com.campus.love.message.manage;
+package com.campus.love.message.manager;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.message.entity.ChatRecord;
@@ -6,24 +6,24 @@ import com.campus.love.message.mapper.ChatRecordMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
-public class ChatRecordManage {
+public class ChatRecordManager {
 
     private final ChatRecordMapper chatRecordMapper;
 
-    public ChatRecordManage(ChatRecordMapper chatRecordMapper) {
+    public ChatRecordManager(ChatRecordMapper chatRecordMapper) {
         this.chatRecordMapper = chatRecordMapper;
     }
 
     /**
-     * 查找两个人的聊天记录
-     *
+     * 查找两个人聊天记录
      * @param userAId
      * @param userBId
      * @return
      */
-    public LambdaQueryWrapper<ChatRecord> getChatRecordsByTwoUser(int userAId, int userBId) {
+    public List<ChatRecord> getChatRecordsByTwoUser(int userAId, int userBId) {
         LambdaQueryWrapper<ChatRecord> queryWrapper = new LambdaQueryWrapper<>();
 
         queryWrapper.eq(ChatRecord::getSendUserId, userAId)
@@ -31,7 +31,9 @@ public class ChatRecordManage {
                 .or()
                 .eq(ChatRecord::getSendUserId, userBId)
                 .eq(ChatRecord::getReceiveUserId, userAId);
-        return queryWrapper;
+        return chatRecordMapper.selectList(queryWrapper).parallelStream()
+                .sorted((a, b) -> (int) (b.getCreateTime().getTime() - a.getCreateTime().getTime()))
+                .collect(Collectors.toList());
     }
 
     /**

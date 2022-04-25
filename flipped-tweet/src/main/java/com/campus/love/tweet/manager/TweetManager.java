@@ -1,4 +1,4 @@
-package com.campus.love.tweet.manage;
+package com.campus.love.tweet.manager;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.common.core.util.AssertUtil;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TweetManage {
+public class TweetManager {
 
     private final TweetMapper tweetMapper;
 
     private final CommentMapper commentMapper;
 
-    public TweetManage(TweetMapper tweetMapper, CommentMapper commentMapper) {
+    public TweetManager(TweetMapper tweetMapper, CommentMapper commentMapper) {
         this.tweetMapper = tweetMapper;
         this.commentMapper = commentMapper;
     }

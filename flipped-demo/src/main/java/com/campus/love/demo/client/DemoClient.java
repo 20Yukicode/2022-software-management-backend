@@ -1,5 +1,7 @@
 package com.campus.love.demo.client;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.feign.module.demo.DemoFeignClient;
 import com.campus.love.demo.service.DemoService;
@@ -19,6 +21,7 @@ public class DemoClient implements DemoFeignClient {
     @Override
     public MessageModel<String> demoTest(Integer id) {
         log.info("demoFeign");
+
         System.out.println(demoService.test());
         // AssertUtil.failed(300,"调用异常");
         return MessageModel.success("demoClient"+id);
