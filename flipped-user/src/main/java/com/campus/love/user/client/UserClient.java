@@ -31,7 +31,7 @@ public class UserClient implements UserFeignClient {
 
     @Override
     //@GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX + "/subscribed")
-    public MessageModel<List<SubscribedUserDto>> querySubscribedInfo(@RequestParam("userId") Integer userId) {
+    public MessageModel<List<SubscribedUserDto>> querySubscribedInfo(Integer userId) {
         List<Subscribed> subscribedList;
         try {
             subscribedList = subscribedService.getSubscribedList(userId);
@@ -55,7 +55,7 @@ public class UserClient implements UserFeignClient {
     }
 
     @Override
-    public MessageModel<UserInfoDto> queryUserInfos(@RequestParam("userId") Integer userId) {
+    public MessageModel<UserInfoDto> queryUserInfos(Integer userId) {
         User user = userService.getOneById(userId);
         if (user != null) {
             UserInfoDto userInfoDto = UserInfoDto.builder()

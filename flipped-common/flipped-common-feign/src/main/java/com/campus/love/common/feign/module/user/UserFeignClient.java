@@ -9,6 +9,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -16,13 +17,13 @@ import java.util.List;
 public interface UserFeignClient {
 
     @ApiOperation("获取关注者的信息")
-    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX + "/subscribed")
-    MessageModel<List<SubscribedUserDto>> querySubscribedInfo(Integer userId);
+    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX + "/subscribed/{userId}")
+    MessageModel<List<SubscribedUserDto>> querySubscribedInfo(@PathVariable Integer userId);
 
 
     @ApiOperation("获取某用户的名字，头像")
-    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX + "/userInfo")
-    MessageModel<UserInfoDto> queryUserInfos(Integer userId);
+    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX + "/userInfo/{userId}")
+    MessageModel<UserInfoDto> queryUserInfos(@PathVariable Integer userId);
 
 
     /**
