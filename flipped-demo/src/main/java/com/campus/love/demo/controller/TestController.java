@@ -32,13 +32,12 @@ public class TestController {
     @RequestMapping(value = "/mq", method = RequestMethod.GET)
     public MessageModel<String> mq() {
 
-        NoticeDto noticeDto = new NoticeDto();
-        noticeDto.setMessageType(MessageType.COMMENT);
-        noticeDto.setUserId(1);
-        noticeDto.setMessageId(3);
-
+        NoticeDto noticeDto = NoticeDto.builder()
+                .messageId(3)
+                .userId(1)
+                .messageType(MessageType.COMMENT_COMMENT).build();
         String exchange = TweetConstant.TWEET_EXCHANGE;
-        rabbitTemplate.convertAndSend(exchange, "blue", noticeDto);
+        rabbitTemplate.convertAndSend(exchange, TweetConstant.COMMENT_KEY, noticeDto);
 
         return MessageModel.success("hello world");
     }

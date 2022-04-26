@@ -7,11 +7,20 @@ public enum MessageType {
 
     FOCUS_ON(0, "关注", "Subscribed"),
 
-    GIVE_A_LIKE(1, "点赞", "Likes"),
+    LIKES_TWEET(1, "点赞动态", "Likes"),
 
-    COMMENT(2, "评论", "Comment"),
+    LIKES_COMMENT(2,"点赞动态","Likes"),
 
-    SYSTEM_NOTICE(3, "系统通知", "Notice");
+    COMMENT_TWEET(3,"评论动态","Comment"),
+    COMMENT_COMMENT(4, "评论评论", "Comment"),
+
+    SYSTEM_NOTICE(5, "系统通知", "Notice"),
+
+    REPORT_USER(6,"举报用户","Report"),
+
+    REPORT_TWEET(7,"举报动态","Report"),
+
+    REPORT_COMMENT(8,"举报评论","Report");
 
     final Integer number;
 

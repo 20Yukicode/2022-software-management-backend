@@ -1,5 +1,12 @@
 package com.campus.love.tweet.enums;
 
+import com.campus.love.common.core.exception.ApiException;
+import com.campus.love.tweet.domain.bo.CommentBo;
+import lombok.Getter;
+
+import java.util.Comparator;
+
+@Getter
 public enum Order {
     TIME_DESC(1, "按照时间降序"),
 
@@ -21,5 +28,24 @@ public enum Order {
     Order(long code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+    public static Comparator<? super CommentBo> strategy(Order order) {
+        switch (order) {
+            case TIME_DESC:
+                return (a, b) -> a.getComment().getCreateTime().after(b.getComment().getCreateTime()) ? 1 : 0;
+            case TIME_ASC:
+                return (a, b) -> a.getComment().getCreateTime().before(b.getComment().getCreateTime()) ? 1 : 0;
+            case LIKES_ASC:
+                return (a,b)->1;
+            case COMMENT_ASC:
+                return (a,b)->1;
+            case LIKES_DESC:
+                return (a,b)->1;
+            case COMMENT_DESC:
+                return (a,b)->1;
+            default:
+                throw new ApiException("不存在这种排序类型");
+        }
     }
 }

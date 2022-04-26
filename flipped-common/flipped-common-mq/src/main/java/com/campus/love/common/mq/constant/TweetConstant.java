@@ -12,8 +12,4 @@ public interface TweetConstant {
 
     String COMMENT_KEY="comment";
 
-
-    String SUBSCRIBED_QUEUE="flipped.tweet.subscribed.queue";
-
-    String SUBSCRIBED_KEY="subscribed";
 }

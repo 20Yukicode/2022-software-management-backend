@@ -1,4 +1,4 @@
-package com.campus.love.message.enums;
+package com.campus.love.common.mq.enums;
 
 public enum ReadState {
 

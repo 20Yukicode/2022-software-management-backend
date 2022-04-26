@@ -10,7 +10,7 @@ public class Operator {
 
     @NotNull
     @ApiModelProperty("动态Id或评论Id")
-    private Integer operatorId;
+    private Integer tweetOrCommentId;
 
     @NotNull
     @ApiModelProperty("回复类型")

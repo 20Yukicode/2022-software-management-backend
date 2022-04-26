@@ -1,18 +1,25 @@
 package com.campus.love.tweet.manager;
 
+import com.alibaba.druid.util.DaemonThreadFactory;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.feign.module.user.UserFeignClient;
 import com.campus.love.common.feign.module.user.dto.UserInfoDto;
+import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.enums.MessageType;
+import com.campus.love.common.mq.enums.ReadState;
 import com.campus.love.tweet.domain.bo.CommentBo;
 import com.campus.love.tweet.entity.Comment;
 import com.campus.love.tweet.entity.Tweet;
+import com.campus.love.tweet.enums.OperatorType;
 import com.campus.love.tweet.mapper.CommentMapper;
 import com.campus.love.tweet.mapper.TweetMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class CommentManager {
@@ -29,6 +36,49 @@ public class CommentManager {
         this.userFeignClient = userFeignClient;
     }
 
+    public NoticeDto generatorNoticeDto(Comment comment) {
+        AssertUtil.ifNull(comment.getId(), "commentId不能为空");
+        Integer pTweetId = comment.getPTweetId();
+        MessageType messageType=pTweetId==null?MessageType.COMMENT_COMMENT:MessageType.COMMENT_TWEET;
+        return NoticeDto.builder()
+                .messageId(comment.getId())
+                .userId(comment.getUserId())
+                .messageType(messageType)
+                .readState(ReadState.NOT_READ)
+                .createTime(comment.getCreateTime()).build();
+    }
+
+    /**
+     * 改变评论的数字
+     * @param operatorId
+     * @param operatorType
+     * @param num
+     */
+    public void changeCommentNum(Integer operatorId, OperatorType operatorType, Integer num) {
+        switch (operatorType) {
+            case TWEET:
+                
+                //todo 这里记得用redis
+                Tweet tweet = tweetMapper.selectById(operatorId);
+                AssertUtil.ifNull(tweet,"不存在该动态");
+
+                tweet.setCommentNum(tweet.getCommentNum() + num);
+                tweetMapper.updateById(tweet);
+                break;
+
+            case COMMENT:
+                Comment comment = commentMapper.selectById(operatorId);
+                AssertUtil.ifNull(comment,"不存在该评论");
+
+                comment.setCommentNum(comment.getCommentNum() + num);
+                commentMapper.updateById(comment);
+                break;
+
+            default:
+                AssertUtil.failed("不是动态或评论");
+        }
+    }
+
     /**
      * 将comment转为commentBo
      * @param comment
@@ -38,35 +88,46 @@ public class CommentManager {
         if (comment == null) {
             AssertUtil.failed("comment不能为空");
         }
-        Integer receiveUserId;
+        CommentBo.CommentBoBuilder builder = CommentBo.builder();
+        Integer receiveUserId = null;
         Integer pCommentId = comment.getPCommentId();
+        Integer pTweetId = comment.getPTweetId();
         //分两种情况，第一种是父节点是动态
+
         //第二种情况是父节点是评论
-        if (pCommentId == null) {
+        if (pTweetId != null) {
             LambdaQueryWrapper<Tweet> tweetLambdaQueryWrapper =
                     new LambdaQueryWrapper<>();
-            tweetLambdaQueryWrapper.eq(Tweet::getId, comment.getPTweetId());
+            tweetLambdaQueryWrapper.eq(Tweet::getId, pTweetId);
             Tweet tweet = tweetMapper.selectOne(tweetLambdaQueryWrapper);
             receiveUserId = tweet.getUserId();
-        } else {
+        } else if (pCommentId != null) {
             LambdaQueryWrapper<Comment> commentLambdaQueryWrapper =
                     new LambdaQueryWrapper<>();
             commentLambdaQueryWrapper.eq(Comment::getId, pCommentId);
             Comment comment1 = commentMapper.selectOne(commentLambdaQueryWrapper);
             receiveUserId = comment1.getUserId();
+        } else {
+            AssertUtil.failed("pTweetId和pCommentId不能同时为空");
         }
+//        CompletableFuture<Void> sendFuture = CompletableFuture
+//                .supplyAsync(() -> userFeignClient.queryUserInfos(comment.getUserId()))
+//                .thenAccept((data) -> builder.sendUserInfo(data.getData()));
+//
+//        Integer finalReceiveUserId = receiveUserId;
+//        CompletableFuture<Void> receiveFuture = CompletableFuture
+//                .supplyAsync(() -> userFeignClient.queryUserInfos(finalReceiveUserId))
+//                .thenAccept((data) -> builder.receiveUserInfo(data.getData()));
+//
+//        CompletableFuture.allOf(sendFuture, receiveFuture).join();
 
-        MessageModel<UserInfoDto> receiveUserInfoDtoMessageModel =
-                userFeignClient.queryUserInfos(receiveUserId);
+        MessageModel<UserInfoDto> userInfoDtoMessageModel = userFeignClient.queryUserInfos(comment.getUserId());
+        builder.sendUserInfo(userInfoDtoMessageModel.getData());
 
-        MessageModel<UserInfoDto> SendUserInfoDtoMessageModel =
-                userFeignClient.queryUserInfos(comment.getUserId());
+        MessageModel<UserInfoDto> userInfoDtoMessageModel1 = userFeignClient.queryUserInfos(receiveUserId);
+        builder.receiveUserInfo(userInfoDtoMessageModel1.getData());
 
-        return CommentBo.builder()
-                .comment(comment)
-                .sendUserInfo(SendUserInfoDtoMessageModel.getData())
-                .receiveUserInfo(receiveUserInfoDtoMessageModel.getData())
-                .build();
+        return builder.comment(comment).build();
     }
     /**
      * 查询id为commentId的评论实体

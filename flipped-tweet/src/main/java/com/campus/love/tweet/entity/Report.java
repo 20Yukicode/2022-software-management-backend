@@ -9,6 +9,7 @@ import java.util.Date;
 
 import com.campus.love.common.core.domain.BaseEntity;
 import com.google.common.io.BaseEncoding;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -17,6 +18,7 @@ import lombok.Data;
  */
 @TableName(value ="report")
 @Data
+@Builder
 public class Report extends BaseEntity {
     /**
      * ID

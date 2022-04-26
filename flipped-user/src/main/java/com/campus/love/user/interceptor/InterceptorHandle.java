@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Configuration
+//@Configuration
 @Slf4j
 public class InterceptorHandle extends BaseInterceptorHandle {
 

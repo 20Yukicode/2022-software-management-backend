@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class HttpUtil {
 
-    private static ServletRequestAttributes getAttributes() {
+    public static ServletRequestAttributes getAttributes() {
         ServletRequestAttributes requestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        assert requestAttributes != null;
         return requestAttributes;
     }
+
 
     public static HttpServletRequest currentRequest() {
         return getAttributes().getRequest();

@@ -7,9 +7,11 @@ import com.campus.love.tweet.domain.vo.CommentTreeNodeVo;
 import com.campus.love.tweet.domain.vo.TweetVo;
 import com.campus.love.tweet.service.CommentService;
 import com.campus.love.tweet.service.TweetService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+@Api(tags = "动态模块")
 @RestController
 @RequestMapping("/tweet")
 public class TweetController {
@@ -25,7 +27,7 @@ public class TweetController {
     }
 
     @ApiOperation("展示一条动态及下面的所有评论(只有直接)")
-    @GetMapping("/{tweetId}")
+    @GetMapping("/tweetId/{tweetId}")
     public MessageModel<TweetVo<CommentBo>> queryDirectComments(@PathVariable Integer tweetId) {
 
         TweetVo<CommentBo> tweetAndComments = tweetService.getCommentsByTweet(tweetId);
@@ -35,7 +37,7 @@ public class TweetController {
     }
 
     @ApiOperation("展示一条动态及下面的所有评论及下面的所有评论(可以间接)")
-    @GetMapping("/{tweetId}/all")
+    @GetMapping("/tweetId/{tweetId}/all")
     public MessageModel<TweetVo<CommentTreeNodeVo<CommentBo>>>
     queryInDirectCommentsByTweet(@PathVariable Integer tweetId,
                                  @RequestParam(value = "order",required = false) Order order) {
@@ -46,7 +48,7 @@ public class TweetController {
 
 
     @ApiOperation("展示一条评论以及下面的所有评论(可以间接)")
-    @GetMapping("/{commentId}/all")
+    @GetMapping("/commentId/{commentId}/all")
     public MessageModel<CommentTreeNodeVo<CommentBo>>
     queryInDirectCommentsByComment(@PathVariable Integer commentId,
                                    @RequestParam(value = "order",required = false) Order order) {

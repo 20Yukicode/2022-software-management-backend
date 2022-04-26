@@ -28,11 +28,8 @@ public class TweetManager {
      * @return
      */
     public Tweet getOneTweet(Integer tweetId) {
-        if(tweetId==null){
-            return null;
-        }
-        LambdaQueryWrapper<Tweet> queryWrapper = new LambdaQueryWrapper<>();
-        Tweet tweet = tweetMapper.selectOne(queryWrapper);
+        AssertUtil.ifNull(tweetId, "tweetId不能为空");
+        Tweet tweet = tweetMapper.selectById(tweetId);
         AssertUtil.ifNull(tweet, "找不到tweetId为" + tweetId + "的动态");
         return tweet;
     }
@@ -43,9 +40,7 @@ public class TweetManager {
      * @return
      */
     public List<Comment> getCommentsByTweet(Integer tweetId) {
-        if (tweetId == null) {
-            return null;
-        }
+        AssertUtil.ifNull(tweetId, "tweetId不能为空");
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getPTweetId, tweetId);
         return commentMapper.selectList(queryWrapper);

@@ -1,10 +1,12 @@
 package com.campus.love.message.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.campus.love.common.core.domain.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -13,11 +15,12 @@ import lombok.Data;
  */
 @TableName(value ="notice")
 @Data
+@Builder
 public class Notice extends BaseEntity {
     /**
      * Id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     @ApiModelProperty("通知Id")
     private Integer id;
 

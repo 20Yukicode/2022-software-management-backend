@@ -11,12 +11,15 @@ import com.campus.love.tweet.entity.Tweet;
 import com.campus.love.tweet.service.CommentService;
 import com.campus.love.tweet.service.LikesService;
 import com.campus.love.tweet.service.UserTweetService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(tags = "用户动态模块")
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -35,7 +38,7 @@ public class UserTweetController {
     }
 
     @ApiOperation("查询用户的所有动态")
-    @GetMapping("/tweet/{userId}")
+    @GetMapping("/tweet/userId/{userId}")
     public MessageModel<List<Tweet>> queryUserTweets(@PathVariable Integer userId) {
 
         return MessageModel.success(userTweetService.getTweets(userId));
@@ -63,7 +66,7 @@ public class UserTweetController {
     }
 
     @ApiOperation("移除动态")
-    @DeleteMapping("/tweet/{tweetId}")
+    @DeleteMapping("/tweet/tweetId/{tweetId}")
     public MessageModel<Object> removeTweet(@PathVariable Integer tweetId){
 
         userTweetService.deleteTweet(tweetId);
@@ -79,7 +82,7 @@ public class UserTweetController {
 
 
     @ApiOperation("删除回复")
-    @PostMapping("/comment/{commentId}")
+    @PostMapping("/comment/commentId/{commentId}")
     public MessageModel<Object> removeComment(@PathVariable Integer commentId,
                                               @RequestBody Operator operator) {
 
@@ -96,13 +99,14 @@ public class UserTweetController {
     }
 
     @ApiOperation("取消点赞")
-    @PostMapping("/likes/unlike/{id}")
+    @PostMapping("/likes/unlike/id/{id}")
     public MessageModel<Object> unlikeAComment(@PathVariable Integer id,
                                                @RequestBody Operator operator) {
 
         likesService.unlikeComment(id,operator);
         return MessageModel.success();
     }
+
 
 
 }

@@ -7,12 +7,11 @@ import com.campus.love.common.core.util.SplitUtil;
 import com.campus.love.common.feign.module.user.UserFeignClient;
 import com.campus.love.common.feign.module.user.dto.UserInfoDto;
 import com.campus.love.message.domain.bo.ChatRecordBo;
-import com.campus.love.message.enums.ReadState;
+import com.campus.love.common.mq.enums.ReadState;
 import com.campus.love.message.entity.ChatRecord;
 import com.campus.love.message.manager.ChatRecordManager;
 import com.campus.love.message.mapper.ChatRecordMapper;
 import com.campus.love.message.service.ChatService;
-import com.campus.love.message.util.ThreadUtil;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,11 +32,6 @@ public class ChatServiceImpl implements ChatService {
 
     private final UserFeignClient userFeignClient;
 
-    /**
-     * 手动创建线程池
-     */
-    private static final ThreadPoolExecutor executor = new  ThreadPoolExecutor(20,25,100L,
-            TimeUnit.SECONDS,new LinkedBlockingQueue<>(),new ThreadPoolExecutor.CallerRunsPolicy());
 
     public ChatServiceImpl(ChatRecordMapper chatRecordMapper, ChatRecordManager chatRecordManager, UserFeignClient userFeignClient) {
         this.chatRecordMapper = chatRecordMapper;
@@ -59,7 +51,7 @@ public class ChatServiceImpl implements ChatService {
      * @return
      */
     private ChatRecordBo getChatRecordByTwoUserId(String s, List<ChatRecord> chatRecordList) {
-        List<Integer> split = SplitUtil.split(s, "_",Integer.class);
+        List<Integer> split = SplitUtil.split(s, "_", Integer.class);
         assert split != null;
         Integer userAId = split.get(0);
         Integer userBId = split.get(1);
@@ -69,15 +61,16 @@ public class ChatServiceImpl implements ChatService {
                 .userAId(userAId)
                 .userBId(userBId);
 
-        List<Runnable> o = List.of(() -> {
+        CompletableFuture<Void> getBInfoAsync = CompletableFuture.runAsync(() -> {
             //获取用户B的相关信息
             MessageModel<UserInfoDto> userSomeInfos = userFeignClient
                     .queryUserInfos(userBId);
             UserInfoDto data = userSomeInfos.getData();
             builder.userBName(data.getUserName())
                     .userBAvatar(data.getUserAvatar());
-        }, () -> {
-            //获取两个人的所有聊天消息
+        });
+
+        CompletableFuture<Void> getChatRecordsAsync = CompletableFuture.runAsync(() -> {
             List<ChatRecord> collect = chatRecordList
                     .stream()
                     .sorted(Comparator.comparing(ChatRecord::getCreateTime))
@@ -85,7 +78,7 @@ public class ChatServiceImpl implements ChatService {
             builder.userChatRecordBoList(collect);
         });
 
-        ThreadUtil.run(executor, o);
+        CompletableFuture.allOf(getBInfoAsync, getChatRecordsAsync).join();
 
         return builder.build();
     }
