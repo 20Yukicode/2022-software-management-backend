@@ -4,12 +4,14 @@ import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.feign.module.user.dto.SubscribedUserDto;
 import com.campus.love.message.service.NoticeService;
 import com.campus.love.message.service.SubscribedService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(tags ="消息模块")
 @RestController
 @RequestMapping("/notice")
 @Slf4j

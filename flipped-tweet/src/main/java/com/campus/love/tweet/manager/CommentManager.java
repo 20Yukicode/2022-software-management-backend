@@ -1,11 +1,9 @@
 package com.campus.love.tweet.manager;
 
-import com.alibaba.druid.util.DaemonThreadFactory;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.util.AssertUtil;
+import com.campus.love.common.core.util.HttpUtil;
 import com.campus.love.common.feign.module.user.UserFeignClient;
-import com.campus.love.common.feign.module.user.dto.UserInfoDto;
 import com.campus.love.common.mq.domain.dto.NoticeDto;
 import com.campus.love.common.mq.enums.MessageType;
 import com.campus.love.common.mq.enums.ReadState;
@@ -16,10 +14,10 @@ import com.campus.love.tweet.enums.OperatorType;
 import com.campus.love.tweet.mapper.CommentMapper;
 import com.campus.love.tweet.mapper.TweetMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 public class CommentManager {
@@ -92,8 +90,9 @@ public class CommentManager {
         Integer receiveUserId = null;
         Integer pCommentId = comment.getPCommentId();
         Integer pTweetId = comment.getPTweetId();
-        //分两种情况，第一种是父节点是动态
 
+
+        //分两种情况，第一种是父节点是动态
         //第二种情况是父节点是评论
         if (pTweetId != null) {
             LambdaQueryWrapper<Tweet> tweetLambdaQueryWrapper =
@@ -110,22 +109,19 @@ public class CommentManager {
         } else {
             AssertUtil.failed("pTweetId和pCommentId不能同时为空");
         }
-//        CompletableFuture<Void> sendFuture = CompletableFuture
-//                .supplyAsync(() -> userFeignClient.queryUserInfos(comment.getUserId()))
-//                .thenAccept((data) -> builder.sendUserInfo(data.getData()));
-//
-//        Integer finalReceiveUserId = receiveUserId;
-//        CompletableFuture<Void> receiveFuture = CompletableFuture
-//                .supplyAsync(() -> userFeignClient.queryUserInfos(finalReceiveUserId))
-//                .thenAccept((data) -> builder.receiveUserInfo(data.getData()));
-//
-//        CompletableFuture.allOf(sendFuture, receiveFuture).join();
 
-        MessageModel<UserInfoDto> userInfoDtoMessageModel = userFeignClient.queryUserInfos(comment.getUserId());
-        builder.sendUserInfo(userInfoDtoMessageModel.getData());
+        HttpUtil.setInheritable();
+        CompletableFuture<Void> sendFuture = CompletableFuture
+                .supplyAsync(() -> userFeignClient.queryUserInfos(comment.getUserId()))
+                .thenAccept((data) -> builder.sendUserInfo(data.getData()));
 
-        MessageModel<UserInfoDto> userInfoDtoMessageModel1 = userFeignClient.queryUserInfos(receiveUserId);
-        builder.receiveUserInfo(userInfoDtoMessageModel1.getData());
+
+        Integer finalReceiveUserId = receiveUserId;
+        CompletableFuture<Void> receiveFuture = CompletableFuture
+                .supplyAsync(() -> userFeignClient.queryUserInfos(finalReceiveUserId))
+                .thenAccept((data) -> builder.receiveUserInfo(data.getData()));
+
+        CompletableFuture.allOf(sendFuture, receiveFuture).join();
 
         return builder.comment(comment).build();
     }

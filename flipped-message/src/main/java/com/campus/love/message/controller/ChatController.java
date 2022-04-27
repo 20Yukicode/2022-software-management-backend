@@ -4,12 +4,14 @@ import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.message.domain.bo.ChatRecordBo;
 import com.campus.love.message.entity.ChatRecord;
 import com.campus.love.message.service.ChatService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(tags = "聊天模块")
 @RestController
 @RequestMapping("/chat")
 @Slf4j

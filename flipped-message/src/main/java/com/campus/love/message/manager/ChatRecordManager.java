@@ -32,7 +32,7 @@ public class ChatRecordManager {
                 .eq(ChatRecord::getSendUserId, userBId)
                 .eq(ChatRecord::getReceiveUserId, userAId);
         return chatRecordMapper.selectList(queryWrapper).parallelStream()
-                .sorted((a, b) -> (int) (b.getCreateTime().getTime() - a.getCreateTime().getTime()))
+                .sorted((a, b) -> a.getCreateTime().after(b.getCreateTime()) ? 1 : 0)
                 .collect(Collectors.toList());
     }
 

@@ -3,6 +3,7 @@ package com.campus.love.message.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.util.AssertUtil;
+import com.campus.love.common.core.util.HttpUtil;
 import com.campus.love.common.core.util.SplitUtil;
 import com.campus.love.common.feign.module.user.UserFeignClient;
 import com.campus.love.common.feign.module.user.dto.UserInfoDto;
@@ -51,7 +52,7 @@ public class ChatServiceImpl implements ChatService {
      * @return
      */
     private ChatRecordBo getChatRecordByTwoUserId(String s, List<ChatRecord> chatRecordList) {
-        List<Integer> split = SplitUtil.split(s, "_", Integer.class);
+        List<Integer> split = SplitUtil.splitToInt(s, "_");
         assert split != null;
         Integer userAId = split.get(0);
         Integer userBId = split.get(1);
@@ -61,6 +62,7 @@ public class ChatServiceImpl implements ChatService {
                 .userAId(userAId)
                 .userBId(userBId);
 
+        HttpUtil.setInheritable();
         CompletableFuture<Void> getBInfoAsync = CompletableFuture.runAsync(() -> {
             //获取用户B的相关信息
             MessageModel<UserInfoDto> userSomeInfos = userFeignClient

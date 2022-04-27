@@ -11,17 +11,16 @@ import java.util.stream.Collectors;
  */
 public class SplitUtil {
 
-    public static<T> List<T> split(String str, String splitChar,Class<T> tClass) {
+    public static List<Integer> splitToInt(String str,String splitChar){
         if (StringUtils.isBlank(str)) {
             return null;
         }
         return Arrays.stream(str.split(splitChar))
-                .map(m->(T)m)
+                .map(Integer::valueOf)
                 .collect(Collectors.toList());
     }
 
-    public static<T> List<T> split(String str,Class<T> tClass) {
-
-        return split(str, ",", tClass);
+    public static List<Integer> splitToInt(String str) {
+        return splitToInt(str, ",");
     }
 }
