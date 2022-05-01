@@ -1,7 +1,6 @@
 package com.campus.love.message.service;
 
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.love.message.domain.bo.ChatRecordBo;
 import com.campus.love.message.entity.ChatRecord;
 
@@ -13,7 +12,6 @@ public interface ChatService {
     ChatRecordBo getTwoUserChatRecords(Integer userAId,Integer userBId);
     /**
      * 插入聊天记录
-     * @param oneChatRecord
      */
     void insertChatRecord(ChatRecord oneChatRecord);
 

@@ -59,23 +59,32 @@ public class TestController {
     @GetMapping("/syn")
     public void testSyn(@RequestParam("userId") Integer userId){
 
-        synchronizedByKey.exec(userId,()->{
-            log.info("开始1");
-            try{
-                Thread.sleep(300);
-            }catch (Exception ignored){
+        log.info("开始"+userId);
+        try{
+            Thread.sleep(1000);
+        }catch (Exception ignored){
 
-            }
-            log.info("结束1");
-        });
-        synchronizedByKey1.exec(userId,()->{
-            log.info("开始2");
-            try{
-                Thread.sleep(100);
-            }catch (Exception ignored){
+        }
+        log.info("结束"+userId);
 
-            }
-            log.info("结束2");
-        });
+//        synchronizedByKey.exec(userId,()->{
+//            log.info("开始");
+//            log.info(userId.toString());
+//            try{
+//                Thread.sleep(2000);
+//            }catch (Exception ignored){
+//
+//            }
+//            log.info("结束");
+//        });
+//        synchronizedByKey1.exec(userId,()->{
+//            log.info("开始2");
+//            try{
+//                Thread.sleep(100);
+//            }catch (Exception ignored){
+//
+//            }
+//            log.info("结束2");
+//        });
     }
 }

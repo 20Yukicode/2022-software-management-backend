@@ -12,13 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class HttpUtil {
 
-    static {
-
-        log.info("qidonghttp");
-    }
     public static ServletRequestAttributes getAttributes() {
         ServletRequestAttributes requestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        assert requestAttributes != null;
         return requestAttributes;
     }
 

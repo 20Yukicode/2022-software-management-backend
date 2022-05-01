@@ -15,44 +15,57 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Aspect
 @Slf4j
 @Component
 public class LogAspect {
 
+    private static final String PATH="flipped-common/flipped-common-core/src/main/resources/application-key.yml";
+
     @Pointcut("execution(public * com.campus.love..controller.*.*(..))")
     public void record(){}
 
     @Around("record()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        long startTime= System.currentTimeMillis();
-        Object proceed = point.proceed();
-        long endTime=System.currentTimeMillis();
+        Yaml yaml = new Yaml();
+        Map<String, Object> load = yaml.load(new BufferedReader(new FileReader(PATH)));
 
-        HttpServletRequest request = HttpUtil.currentRequest();
-        Method method = currentMethod(point);
-        Object[] args = point.getArgs();
+        if (((Map<String, Boolean>) load.get("log")).get("enable") == Boolean.TRUE) {
+            long startTime = System.currentTimeMillis();
+            Object proceed = point.proceed();
+            long endTime = System.currentTimeMillis();
+            HttpServletRequest request = HttpUtil.currentRequest();
+            Method method = currentMethod(point);
+            Object[] args = point.getArgs();
 
-        WebLog webLog = WebLog.builder()
-                .startTime(startTime)
-                .spendTime(endTime-startTime)
-                .parameter(getParameters(method,args))
-                .description(getDescription(method))
-                .method(request.getMethod())
-                .uri(request.getRequestURI())
-                .url(request.getRequestURL().toString())
-                .result(proceed)
-                .build();
-        //后续要转为ELK
-        log.info("日志记录"+ JSON.toJSONString(webLog));
-        return proceed;
+            WebLog webLog = WebLog.builder()
+                    .startTime(startTime)
+                    .spendTime(endTime - startTime)
+                    .parameter(getParameters(method, args))
+                    .description(getDescription(method))
+                    .method(request.getMethod())
+                    .uri(request.getRequestURI())
+                    .url(request.getRequestURL().toString())
+                    .result(proceed)
+                    .build();
+            //后续要转为ELK
+            log.info("日志记录" + JSON.toJSONString(webLog));
+            return proceed;
+        } else {
+            return point.proceed();
+        }
+
     }
 
     private Method currentMethod(ProceedingJoinPoint point) {

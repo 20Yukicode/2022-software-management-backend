@@ -45,7 +45,7 @@ public class TweetServiceImpl implements TweetService {
                 .userId(tweet.getUserId())
                 .createTime(tweet.getCreateTime())
                 .createTime(tweet.getUpdateTime())
-                .urls(SplitUtil.split(tweet.getUrl(), String.class))
+                .urls(SplitUtil.splitToStr(tweet.getUrl()))
                 .build();
         tweetVo.setTweetBo(build);
 

@@ -20,6 +20,17 @@ public class SplitUtil {
                 .collect(Collectors.toList());
     }
 
+    public static List<String> splitToStr(String str,String splitChar) {
+        if (StringUtils.isBlank(str)) {
+            return null;
+        }
+        return List.of(str.split(splitChar));
+    }
+
+    public static List<String> splitToStr(String str) {
+        return splitToStr(str,",");
+    }
+
     public static List<Integer> splitToInt(String str) {
         return splitToInt(str, ",");
     }
