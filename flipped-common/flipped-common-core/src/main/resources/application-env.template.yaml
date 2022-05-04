@@ -1,5 +1,5 @@
 log:
   enable: false
 
-##在resources包下建一个application.yml
+##在resources包下建一个application-log.yml
 #把上面的东西放回去，如果要输出日志改成true,不输出日志则为false
