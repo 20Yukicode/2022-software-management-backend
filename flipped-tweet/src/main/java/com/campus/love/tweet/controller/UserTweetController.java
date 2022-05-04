@@ -82,11 +82,10 @@ public class UserTweetController {
 
 
     @ApiOperation("删除回复")
-    @PostMapping("/comment/commentId/{commentId}")
-    public MessageModel<Object> removeComment(@PathVariable Integer commentId,
-                                              @RequestBody Operator operator) {
+    @DeleteMapping("/comment")
+    public MessageModel<Object> removeComment(@RequestBody Operator operator) {
 
-        commentService.deleteComment(commentId, operator);
+        commentService.deleteComment(operator);
         return MessageModel.success();
     }
 

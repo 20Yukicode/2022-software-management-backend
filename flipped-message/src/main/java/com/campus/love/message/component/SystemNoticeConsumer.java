@@ -2,7 +2,7 @@ package com.campus.love.message.component;
 
 import com.campus.love.common.mq.component.notice.IMessageConsumer;
 import com.campus.love.common.mq.constant.SystemNoticeConstant;
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 import com.campus.love.message.service.NoticeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Exchange;
@@ -27,7 +27,7 @@ public class SystemNoticeConsumer implements IMessageConsumer {
             key = SystemNoticeConstant.SYSTEM_NOTICE_KEY
     ))
     @Override
-    public void consumeMsg(NoticeDto message) {
+    public void consumeMsg(NoticeMqDto message) {
         log.info("消费者接收到来自{},{}", SystemNoticeConstant.SYSTEM_NOTICE_QUEUE, message.toString());
         noticeService.insertNotice(message);
     }

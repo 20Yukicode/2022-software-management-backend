@@ -1,9 +1,13 @@
 package com.campus.love.tweet.service.impl;
 
+import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
+import com.campus.love.common.feign.module.tweet.dto.CommentDto;
+import com.campus.love.common.feign.module.user.UserFeignClient;
+import com.campus.love.common.feign.module.user.dto.UserInfoDto;
 import com.campus.love.common.mq.constant.TweetConstant;
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 import com.campus.love.tweet.domain.bo.CommentBo;
 import com.campus.love.tweet.domain.constant.ChangeType;
 import com.campus.love.tweet.enums.Order;
@@ -29,20 +33,23 @@ import java.util.stream.Collectors;
 @Service
 public class CommentServiceImpl1 implements CommentService<CommentBo> {
 
-    private final SynchronizedByKey<Operator> synchronizedByKey;
-
     private final CommentManager commentManager;
 
     private final CommentMapper commentMapper;
 
+    private final UserFeignClient userFeignClient;
+
     private final RabbitTemplate rabbitTemplate;
 
+    private final SynchronizedByKey<Operator> synchronizedByKey;
 
-    public CommentServiceImpl1(CommentManager commentManager, CommentMapper commentMapper, SynchronizedByKey<Operator> synchronizedByKey, RabbitTemplate rabbitTemplate) {
+
+    public CommentServiceImpl1(CommentManager commentManager, CommentMapper commentMapper, SynchronizedByKey<Operator> synchronizedByKey, RabbitTemplate rabbitTemplate, UserFeignClient userFeignClient) {
         this.commentManager = commentManager;
         this.commentMapper = commentMapper;
         this.synchronizedByKey = synchronizedByKey;
         this.rabbitTemplate = rabbitTemplate;
+        this.userFeignClient = userFeignClient;
     }
 
     //找到某条评论下的所有子评论（直接回复或者间接回复）
@@ -75,9 +82,6 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
         List<CommentBo> sortedList = list.stream()
                 .sorted(Order.strategy(order))
                 .collect(Collectors.toList());
-        sortedList.forEach((item)->{
-            System.out.println(item.getComment().getCreateTime());
-        });
         node.setChildCommentNodes(sortedList);
         return node;
     }
@@ -88,7 +92,8 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
     public void insertComment(AddCommentVo addVo) {
         Comment.CommentBuilder builder = Comment.builder();
         Operator operator = addVo.getOperator();
-        Integer tweetOrCommentId = operator.getTweetOrCommentId();
+        Integer tweetId = operator.getTweetId();
+        Integer commentId = operator.getCommentId();
         OperatorType operatorType = operator.getOperatorType();
         builder.content(addVo.getContent())
                 .likesNum(0)
@@ -97,10 +102,14 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
 
         switch (operatorType) {
             case TWEET:
-                builder.pTweetId(tweetOrCommentId);
+                builder.tweetId(tweetId);
+                builder.pTweetId(tweetId);
+                builder.pCommentId(null);
                 break;
             case COMMENT:
-                builder.pCommentId(tweetOrCommentId);
+                builder.tweetId(tweetId);
+                builder.pTweetId(null);
+                builder.pCommentId(commentId);
                 break;
             default:
                 AssertUtil.failed("评论类型错误");
@@ -115,25 +124,45 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
 
             String exchange = TweetConstant.TWEET_EXCHANGE;
             String key = TweetConstant.COMMENT_KEY;
-            NoticeDto noticeDto = commentManager.generatorNoticeDto(build);
-            rabbitTemplate.convertAndSend(exchange, key, noticeDto);
+            NoticeMqDto noticeMqDto = commentManager.generatorNoticeDto(build);
+            rabbitTemplate.convertAndSend(exchange, key, noticeMqDto);
 
-            commentManager.changeCommentNum(tweetOrCommentId, operatorType, ChangeType.ADD);
+            commentManager.changeCommentNum(tweetId, commentId, operatorType, ChangeType.ADD);
         });
     }
 
     @Transactional(rollbackFor = ApiException.class)
     @Override
-    public void deleteComment(Integer commentId,Operator operator) {
-        Integer operatorId = operator.getTweetOrCommentId();
-        OperatorType operatorType = operator.getOperatorType();
+    public void deleteComment(Operator operator) {
 
+        Integer tweetId = operator.getTweetId();
+        Integer commentId = operator.getCommentId();
+        OperatorType operatorType = operator.getOperatorType();
 
         synchronizedByKey.exec(operator, () -> {
             int i = commentMapper.deleteById(commentId);
             AssertUtil.failed(() -> i != 1, "删除评论失败");
 
-            commentManager.changeCommentNum(operatorId, operatorType, ChangeType.SUB);
+            commentManager.changeCommentNum(tweetId, commentId, operatorType, ChangeType.SUB);
         });
+    }
+
+    @Override
+    public CommentDto getCommentDetail(Integer commentId) {
+
+        Comment comment = commentMapper.selectById(commentId);
+
+        AssertUtil.ifNull(comment, "不存在id为" + commentId + "的comment");
+        Integer userId = comment.getUserId();
+        MessageModel<UserInfoDto> userInfoDtoMessageModel = userFeignClient.queryUserInfos(userId);
+        UserInfoDto data = userInfoDtoMessageModel.getData();
+
+        CommentDto commentDto = new CommentDto();
+        commentDto.setUserInfoDto(data);
+        commentDto.setCreateTime(comment.getCreateTime());
+        commentDto.setTweetId(comment.getTweetId());
+        commentDto.setCommentId(commentId);
+        commentDto.setContent(comment.getContent());
+        return commentDto;
     }
 }

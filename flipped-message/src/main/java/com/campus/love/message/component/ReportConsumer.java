@@ -2,7 +2,7 @@ package com.campus.love.message.component;
 
 import com.campus.love.common.mq.component.notice.IReportConsumer;
 import com.campus.love.common.mq.constant.ReportConstant;
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 import com.campus.love.message.service.NoticeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Exchange;
@@ -28,7 +28,7 @@ public class ReportConsumer implements IReportConsumer {
             key = ReportConstant.REPORT_USER_KEY
     ))
     @Override
-    public void consumeReportUserMsg(NoticeDto message) {
+    public void consumeReportUserMsg(NoticeMqDto message) {
 
         log.info("消费者接收到来自{},{}", ReportConstant.REPORT_USER_QUEUE, message.toString());
         noticeService.insertNotice(message);
@@ -42,7 +42,7 @@ public class ReportConsumer implements IReportConsumer {
             key = ReportConstant.REPORT_TWEET_QUEUE
     ))
     @Override
-    public void consumeReportTweetMsg(NoticeDto message) {
+    public void consumeReportTweetMsg(NoticeMqDto message) {
 
         log.info("消费者接收到来自{},{}", ReportConstant.REPORT_TWEET_QUEUE, message.toString());
         noticeService.insertNotice(message);
@@ -56,7 +56,7 @@ public class ReportConsumer implements IReportConsumer {
             key = ReportConstant.REPORT_COMMENT_KEY
     ))
     @Override
-    public void consumeReportCommentMsg(NoticeDto message) {
+    public void consumeReportCommentMsg(NoticeMqDto message) {
 
         log.info("消费者接收到来自{},{}", ReportConstant.REPORT_COMMENT_QUEUE, message.toString());
         noticeService.insertNotice(message);

@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Data
 @Builder
-public class NoticeDto implements Serializable {
+public class NoticeMqDto implements Serializable {
 
     @ApiModelProperty("消息Id")
     private Integer messageId;

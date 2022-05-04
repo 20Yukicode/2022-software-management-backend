@@ -1,8 +1,8 @@
 package com.campus.love.common.mq.component.notice;
 
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 
 public interface IMessageConsumer {
 
-    void consumeMsg(NoticeDto message);
+    void consumeMsg(NoticeMqDto message);
 }

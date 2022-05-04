@@ -1,6 +1,7 @@
 package com.campus.love.tweet.client;
 
 import com.campus.love.common.core.api.MessageModel;
+import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.feign.module.tweet.TweetFeignClient;
 import com.campus.love.common.feign.module.tweet.dto.CommentDto;
 import com.campus.love.common.feign.module.tweet.dto.LikesDto;
@@ -25,16 +26,22 @@ public class TweetClient implements TweetFeignClient {
 
 
     @Override
-    public MessageModel<List<LikesDto>> queryLikes(Integer userId) {
+    public MessageModel<LikesDto> queryLikes(Integer messageId) {
 
+        AssertUtil.validateNull(messageId,"消息Id不能为空");
 
-        return null;
+        LikesDto likesDetail = likesService.getLikesDetail(messageId);
+
+        return MessageModel.success(likesDetail);
     }
 
     @Override
-    public MessageModel<List<CommentDto>> queryComments(Integer userId) {
+    public MessageModel<CommentDto> queryComments(Integer messageId) {
 
+        AssertUtil.validateNull(messageId, "消息Id不能为空");
 
-        return null;
+        CommentDto commentDetail = commentService.getCommentDetail(messageId);
+
+        return MessageModel.success(commentDetail);
     }
 }

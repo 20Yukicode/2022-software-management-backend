@@ -24,12 +24,6 @@ public class SubscribedServiceImpl implements SubscribedService {
         MessageModel<List<SubscribedUserDto>> subscribedInfo =
                 userFeignClient.querySubscribedInfo(userId);
 
-        List<SubscribedUserDto> data = subscribedInfo.getData();
-
-        if (data == null) {
-            AssertUtil.failed("不存在该用户" + userId);
-        }
-
-        return data;
+        return subscribedInfo.getData();
     }
 }

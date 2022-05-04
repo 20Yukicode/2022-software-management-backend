@@ -3,7 +3,7 @@ package com.campus.love.demo.controller;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.util.SynchronizedByKey;
 import com.campus.love.common.mq.constant.TweetConstant;
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 import com.campus.love.common.mq.enums.MessageType;
 import com.campus.love.demo.domain.enums.Order;
 import lombok.extern.slf4j.Slf4j;
@@ -32,12 +32,12 @@ public class TestController {
     @RequestMapping(value = "/mq", method = RequestMethod.GET)
     public MessageModel<String> mq() {
 
-        NoticeDto noticeDto = NoticeDto.builder()
+        NoticeMqDto noticeMqDto = NoticeMqDto.builder()
                 .messageId(3)
                 .userId(1)
                 .messageType(MessageType.COMMENT_COMMENT).build();
         String exchange = TweetConstant.TWEET_EXCHANGE;
-        rabbitTemplate.convertAndSend(exchange, TweetConstant.COMMENT_KEY, noticeDto);
+        rabbitTemplate.convertAndSend(exchange, TweetConstant.COMMENT_KEY, noticeMqDto);
 
         return MessageModel.success("hello world");
     }

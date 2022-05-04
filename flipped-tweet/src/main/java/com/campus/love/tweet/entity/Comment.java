@@ -24,6 +24,8 @@ public class Comment extends BaseEntity {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+    @ApiModelProperty("评论属于哪个动态")
+    private Integer tweetId;
     /**
      * 父节点是动态
      */

@@ -6,15 +6,15 @@
 
     <resultMap id="BaseResultMap" type="com.campus.love.tweet.entity.Likes">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="likedId" column="liked_id" jdbcType="INTEGER"/>
+            <result property="tweetId" column="tweet_id" jdbcType="INTEGER"/>
+            <result property="commentId" column="comment_id" jdbcType="INTEGER"/>
             <result property="userId" column="user_id" jdbcType="INTEGER"/>
-            <result property="isTweet" column="is_tweet" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,liked_id,user_id,
+        id,tweet_id,comment_id,user_id,
         is_tweet,create_time,update_time
     </sql>
 </mapper>

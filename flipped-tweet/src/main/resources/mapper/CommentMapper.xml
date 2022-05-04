@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.campus.love.tweet.entity.Comment">
             <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="tweetId" column="tweet_id" jdbcType="INTEGER"/>
             <result property="pTweetId" column="p_tweet_id" jdbcType="INTEGER"/>
             <result property="pCommentId" column="p_comment_id" jdbcType="INTEGER"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
@@ -17,7 +18,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,p_tweet_id,p_comment_id,
+        id,tweet_id,p_tweet_id,p_comment_id,
         content,likes_num,comment_num,user_id,
         create_time,update_time
     </sql>

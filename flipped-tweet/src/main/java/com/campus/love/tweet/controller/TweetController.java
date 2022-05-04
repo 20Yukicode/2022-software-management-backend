@@ -40,7 +40,8 @@ public class TweetController {
     @GetMapping("/tweetId/{tweetId}/all")
     public MessageModel<TweetVo<CommentTreeNodeVo<CommentBo>>>
     queryInDirectCommentsByTweet(@PathVariable Integer tweetId,
-                                 @RequestParam(value = "order",required = false) Order order) {
+                                 @RequestParam(value = "order", required = false) Order order) {
+        order = order == null ? Order.TIME_DESC : order;
         TweetVo<CommentTreeNodeVo<CommentBo>> commentTreeNodeVoTweetVo =
                 tweetService.getAllCommentsByTweet(tweetId, order);
         return MessageModel.success(commentTreeNodeVoTweetVo);
@@ -51,7 +52,7 @@ public class TweetController {
     @GetMapping("/commentId/{commentId}/all")
     public MessageModel<CommentTreeNodeVo<CommentBo>>
     queryInDirectCommentsByComment(@PathVariable Integer commentId,
-                                   @RequestParam(value = "order",required = false) Order order) {
+                                   @RequestParam(value = "order", required = false) Order order) {
         order = order == null ? Order.TIME_DESC : order;
         CommentTreeNodeVo<CommentBo> comments =
                 commentService.GetAllComments(commentId, order);

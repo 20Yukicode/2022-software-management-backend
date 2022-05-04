@@ -11,11 +11,13 @@ import com.campus.love.tweet.entity.Tweet;
 import com.campus.love.tweet.manager.CommentManager;
 import com.campus.love.tweet.manager.TweetManager;
 import com.campus.love.tweet.service.TweetService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TweetServiceImpl implements TweetService {
 
@@ -55,6 +57,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public TweetVo<CommentBo> getCommentsByTweet(Integer tweetId) {
         List<Comment> commentsByTweet = tweetManager.getCommentsByTweet(tweetId);
+        log.info("commentsByTweet"+commentsByTweet);
         Tweet tweet = tweetManager.getOneTweet(tweetId);
         //转换成commentBo
         List<CommentBo> collect = commentsByTweet

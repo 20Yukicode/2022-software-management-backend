@@ -4,12 +4,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class CommentDto {
+public class LikesMqDto {
 
-    @ApiModelProperty("评论Id")
-    private Integer commentId;
+    @ApiModelProperty("点赞Id")
+    private Integer likesId;
 
-
-    @ApiModelProperty("评论数")
+    @ApiModelProperty("点赞数")
     private Integer num;
 }

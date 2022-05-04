@@ -1,6 +1,7 @@
 package com.campus.love.tweet.service;
 
 
+import com.campus.love.common.feign.module.tweet.dto.CommentDto;
 import com.campus.love.tweet.enums.Operator;
 import com.campus.love.tweet.enums.Order;
 import com.campus.love.tweet.domain.vo.AddCommentVo;
@@ -24,9 +25,11 @@ public interface CommentService<T> {
 
     /**
      * 移除一条评论（不考虑级联删除）
-     * @param commentId
      */
-    void deleteComment(Integer commentId, Operator operator);
+
+    void deleteComment(Operator operator);
+
+    CommentDto getCommentDetail(Integer commentId);
 
 
 

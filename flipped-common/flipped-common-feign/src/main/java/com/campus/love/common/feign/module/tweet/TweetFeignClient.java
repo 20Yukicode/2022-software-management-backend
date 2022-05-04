@@ -18,12 +18,12 @@ import java.util.List;
 public interface TweetFeignClient {
 
     @ApiOperation("获取点赞用户列表")
-    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX+"/likes/{userId}")
-    MessageModel<List<LikesDto>> queryLikes(@PathVariable Integer userId);
+    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX+"/likes/{messageId}")
+    MessageModel<LikesDto> queryLikes(@PathVariable Integer messageId);
 
 
     @ApiOperation("获取评论用户列表")
-    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX+"/comment/{userId}")
-    MessageModel<List<CommentDto>> queryComments(@PathVariable Integer userId);
+    @GetMapping(FeignConstant.FEIGN_INSIDE_URL_PREFIX+"/comment/{messageId}")
+    MessageModel<CommentDto> queryComments(@PathVariable Integer messageId);
 
 }

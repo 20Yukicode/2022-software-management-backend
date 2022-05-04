@@ -3,7 +3,7 @@ package com.campus.love.tweet.service.impl;
 import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.mq.constant.ReportConstant;
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 import com.campus.love.common.mq.enums.MessageType;
 import com.campus.love.common.mq.enums.ReadState;
 import com.campus.love.tweet.domain.vo.ReportVo;
@@ -53,13 +53,13 @@ public class ReportServiceImpl implements ReportService {
 
         Integer reportedId = report.getReportedId();
         String exchange = ReportConstant.REPORT_EXCHANGE;
-        String key = null;
-        NoticeDto.NoticeDtoBuilder builder = NoticeDto.builder();
+        String key;
+        NoticeMqDto.NoticeMqDtoBuilder builder = NoticeMqDto.builder();
         switch (reportedType) {
             case USER:
                 key = ReportConstant.REPORT_USER_KEY;
 
-                NoticeDto noticeDto = builder
+                NoticeMqDto noticeMqDto = builder
                         .readState(ReadState.NOT_READ)
                         .messageId(report.getId())
                         .messageType(MessageType.REPORT_USER)
@@ -67,14 +67,14 @@ public class ReportServiceImpl implements ReportService {
                         .userId(reportedId)
                         .createTime(report.getCreateTime())
                         .build();
-                rabbitTemplate.convertAndSend(exchange, key, noticeDto);
+                rabbitTemplate.convertAndSend(exchange, key, noticeMqDto);
 
             case TWEET:
                 key = ReportConstant.REPORT_TWEET_KEY;
                 Tweet tweet = tweetMapper.selectById(reportedId);
                 AssertUtil.ifNull(tweet, "不存在该tweet");
 
-                NoticeDto noticeDto1 = builder
+                NoticeMqDto noticeMqDto1 = builder
                         .readState(ReadState.NOT_READ)
                         .messageId(report.getId())
                         .messageType(MessageType.REPORT_TWEET)
@@ -82,14 +82,14 @@ public class ReportServiceImpl implements ReportService {
                         .userId(tweet.getUserId())
                         .createTime(report.getCreateTime())
                         .build();
-                rabbitTemplate.convertAndSend(exchange, key, noticeDto1);
+                rabbitTemplate.convertAndSend(exchange, key, noticeMqDto1);
 
             case COMMENT:
                 key = ReportConstant.REPORT_COMMENT_KEY;
                 Comment comment = commentMapper.selectById(reportedId);
                 AssertUtil.ifNull(comment, "不存在该comment");
 
-                NoticeDto noticeDto2 = builder
+                NoticeMqDto noticeMqDto2 = builder
                         .readState(ReadState.NOT_READ)
                         .messageId(report.getId())
                         .messageType(MessageType.REPORT_COMMENT)
@@ -97,7 +97,7 @@ public class ReportServiceImpl implements ReportService {
                         .userId(comment.getUserId())
                         .createTime(report.getCreateTime())
                         .build();
-                rabbitTemplate.convertAndSend(exchange, key, noticeDto2);
+                rabbitTemplate.convertAndSend(exchange, key, noticeMqDto2);
 
             default:
                 AssertUtil.failed("举报type不存在");

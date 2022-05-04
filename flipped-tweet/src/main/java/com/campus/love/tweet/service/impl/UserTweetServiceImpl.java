@@ -42,6 +42,7 @@ public class UserTweetServiceImpl implements UserTweetService {
         }
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     @Override
     public void changeTweet(PostTweetVo tweetVo) {
         Tweet tweet = userTweetManager.postVo2tweet(tweetVo);
@@ -51,6 +52,7 @@ public class UserTweetServiceImpl implements UserTweetService {
         }
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     @Override
     public void deleteTweet(Integer tweetId) {
         if(tweetMapper.deleteById(tweetId)==0){

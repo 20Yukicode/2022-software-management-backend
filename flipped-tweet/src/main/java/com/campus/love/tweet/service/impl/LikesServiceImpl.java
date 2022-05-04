@@ -1,9 +1,13 @@
 package com.campus.love.tweet.service.impl;
 
+import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
+import com.campus.love.common.feign.module.tweet.dto.LikesDto;
+import com.campus.love.common.feign.module.user.UserFeignClient;
+import com.campus.love.common.feign.module.user.dto.UserInfoDto;
 import com.campus.love.common.mq.constant.TweetConstant;
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 import com.campus.love.tweet.domain.constant.ChangeType;
 import com.campus.love.tweet.enums.Operator;
 import com.campus.love.tweet.enums.OperatorType;
@@ -28,11 +32,14 @@ public class LikesServiceImpl implements LikesService {
 
     private final LikesManager likesManager;
 
-    public LikesServiceImpl(LikesMapper likesMapper, SynchronizedByKey<Operator> synchronizedByKey, RabbitTemplate rabbitTemplate, LikesManager likesManager) {
+    private final UserFeignClient userFeignClient;
+
+    public LikesServiceImpl(LikesMapper likesMapper, SynchronizedByKey<Operator> synchronizedByKey, RabbitTemplate rabbitTemplate, LikesManager likesManager, UserFeignClient userFeignClient) {
         this.likesMapper = likesMapper;
         this.synchronizedByKey = synchronizedByKey;
         this.rabbitTemplate = rabbitTemplate;
         this.likesManager = likesManager;
+        this.userFeignClient = userFeignClient;
     }
 
 
@@ -40,12 +47,25 @@ public class LikesServiceImpl implements LikesService {
     @Override
     public void likeComment(AddLikesVo addLikesVo) {
         Operator operator = addLikesVo.getOperator();
-        Integer operatorId = operator.getTweetOrCommentId();
+        Integer tweetId = operator.getTweetId();
+        Integer commentId = operator.getCommentId();
         OperatorType operatorType = operator.getOperatorType();
 
-        Likes build = Likes.builder()
-                .likedId(operatorId)
-                .isTweet(operatorType.getCode())
+
+        Likes.LikesBuilder builder = Likes.builder();
+        switch (operatorType) {
+            case TWEET:
+                builder.tweetId(tweetId);
+                builder.commentId(null);
+                break;
+            case COMMENT:
+                builder.tweetId(tweetId);
+                builder.commentId(commentId);
+                break;
+            default:
+                throw new ApiException("不存在其他类型的点赞");
+        }
+        Likes build = builder
                 .userId(addLikesVo.getUserId())
                 .build();
 
@@ -58,24 +78,42 @@ public class LikesServiceImpl implements LikesService {
             //发送到消息队列
             String exchange = TweetConstant.TWEET_EXCHANGE;
             String key = TweetConstant.LIKES_KEY;
-            NoticeDto noticeDto = likesManager.generatorNoticeDto(build);
-            rabbitTemplate.convertAndSend(exchange, key, noticeDto);
+            NoticeMqDto noticeMqDto = likesManager.generatorNoticeDto(build);
+            rabbitTemplate.convertAndSend(exchange, key, noticeMqDto);
 
-            likesManager.changeLikesNum(operatorId, operatorType, ChangeType.ADD);
+            likesManager.changeLikesNum(tweetId,commentId, operatorType, ChangeType.ADD);
         });
     }
 
     @Transactional(rollbackFor = ApiException.class)
     @Override
     public void unlikeComment(Integer likeId, Operator operator) {
-        Integer operatorId = operator.getTweetOrCommentId();
+        Integer tweetId = operator.getTweetId();
+        Integer commentId = operator.getCommentId();
         OperatorType operatorType = operator.getOperatorType();
 
         synchronizedByKey.exec(operator, () -> {
             int i = likesMapper.deleteById(likeId);
             AssertUtil.failed(() -> i == 0, "取消点赞失败");
-            likesManager.changeLikesNum(operatorId, operatorType, ChangeType.SUB);
+            likesManager.changeLikesNum(tweetId, commentId, operatorType, ChangeType.SUB);
         });
+    }
+
+    @Override
+    public LikesDto getLikesDetail(Integer likesId) {
+        Likes likes = likesMapper.selectById(likesId);
+        AssertUtil.ifNull(likes, "找不到Id为" + likesId + "的点赞消息");
+
+        Integer userId = likes.getUserId();
+        MessageModel<UserInfoDto> userInfoDtoMessageModel = userFeignClient.queryUserInfos(userId);
+        UserInfoDto data = userInfoDtoMessageModel.getData();
+
+        LikesDto likesDto = new LikesDto();
+        likesDto.setUserInfoDto(data);
+        likesDto.setTweetId(likes.getTweetId());
+        likesDto.setCommentId(likes.getCommentId());
+        likesDto.setCreateTime(likes.getCreateTime());
+        return likesDto;
     }
 
 }

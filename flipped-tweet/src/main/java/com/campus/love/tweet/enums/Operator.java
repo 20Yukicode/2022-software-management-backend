@@ -9,8 +9,11 @@ import javax.validation.constraints.NotNull;
 public class Operator {
 
     @NotNull
-    @ApiModelProperty("动态Id或评论Id")
-    private Integer tweetOrCommentId;
+    @ApiModelProperty("动态Id")
+    private Integer tweetId;
+
+    @ApiModelProperty("评论Id")
+    private Integer commentId;
 
     @NotNull
     @ApiModelProperty("回复类型")

@@ -1,12 +1,12 @@
 package com.campus.love.common.mq.component.notice;
 
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 
 public interface IReportConsumer {
 
-    void consumeReportUserMsg(NoticeDto message);
+    void consumeReportUserMsg(NoticeMqDto message);
 
-    void consumeReportTweetMsg(NoticeDto message);
+    void consumeReportTweetMsg(NoticeMqDto message);
 
-    void consumeReportCommentMsg(NoticeDto message);
+    void consumeReportCommentMsg(NoticeMqDto message);
 }

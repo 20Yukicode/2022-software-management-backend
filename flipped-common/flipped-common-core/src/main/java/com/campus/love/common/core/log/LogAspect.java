@@ -31,7 +31,7 @@ import java.util.Map;
 @Component
 public class LogAspect {
 
-    private static final String PATH="flipped-common/flipped-common-core/src/main/resources/application-key.yml";
+    private static final String PATH="flipped-common/flipped-common-core/src/main/resources/application.yml";
 
     @Pointcut("execution(public * com.campus.love..controller.*.*(..))")
     public void record(){}

@@ -1,5 +1,6 @@
 package com.campus.love.tweet.service.impl;
 
+import com.campus.love.common.feign.module.tweet.dto.CommentDto;
 import com.campus.love.tweet.enums.Operator;
 import com.campus.love.tweet.enums.Order;
 import com.campus.love.tweet.domain.vo.AddCommentVo;
@@ -65,8 +66,13 @@ public class CommentServiceImpl implements CommentService<CommentTreeNodeVo> {
     }
 
     @Override
-    public void deleteComment(Integer commentId, Operator operator) {
+    public void deleteComment(Operator operator) {
 
+    }
+
+    @Override
+    public CommentDto getCommentDetail(Integer commentId) {
+        return null;
     }
 
 

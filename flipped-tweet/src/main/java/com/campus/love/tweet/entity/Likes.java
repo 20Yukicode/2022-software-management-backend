@@ -27,24 +27,17 @@ public class Likes extends BaseEntity {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * 来自于评论或者动态的Id
-     */
-    @ApiModelProperty("评论或者动态Id")
-    private Integer likedId;
+    @ApiModelProperty("动态Id")
+    private Integer tweetId;
+
+    @ApiModelProperty("评论Id")
+    private Integer commentId;
 
     /**
      * 点赞者
      */
     @ApiModelProperty("点赞者Id")
     private Integer userId;
-
-    /**
-     * 是否是动态1-tweet 0-comment
-     */
-    @ApiModelProperty("是否是动态")
-    private Integer isTweet;
-
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

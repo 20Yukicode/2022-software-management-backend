@@ -42,6 +42,8 @@ public class TweetManager {
     public List<Comment> getCommentsByTweet(Integer tweetId) {
         AssertUtil.ifNull(tweetId, "tweetId不能为空");
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+
+        //这里必须pcommentId必须为空
         queryWrapper.eq(Comment::getPTweetId, tweetId);
         return commentMapper.selectList(queryWrapper);
     }

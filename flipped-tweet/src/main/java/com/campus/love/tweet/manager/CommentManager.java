@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.core.util.HttpUtil;
 import com.campus.love.common.feign.module.user.UserFeignClient;
-import com.campus.love.common.mq.domain.dto.NoticeDto;
+import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 import com.campus.love.common.mq.enums.MessageType;
 import com.campus.love.common.mq.enums.ReadState;
 import com.campus.love.tweet.domain.bo.CommentBo;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 public class CommentManager {
@@ -34,11 +33,13 @@ public class CommentManager {
         this.userFeignClient = userFeignClient;
     }
 
-    public NoticeDto generatorNoticeDto(Comment comment) {
+    public NoticeMqDto generatorNoticeDto(Comment comment) {
         AssertUtil.ifNull(comment.getId(), "commentId不能为空");
-        Integer pTweetId = comment.getPTweetId();
-        MessageType messageType=pTweetId==null?MessageType.COMMENT_COMMENT:MessageType.COMMENT_TWEET;
-        return NoticeDto.builder()
+
+        //如果父commentId为空，那么一定是对动态评论的
+        MessageType messageType = comment.getPCommentId() == null ?
+                MessageType.COMMENT_TWEET : MessageType.COMMENT_COMMENT;
+        return NoticeMqDto.builder()
                 .messageId(comment.getId())
                 .userId(comment.getUserId())
                 .messageType(messageType)
@@ -48,16 +49,17 @@ public class CommentManager {
 
     /**
      * 改变评论的数字
-     * @param operatorId
+     * @param commentId
+     * @param tweetId
      * @param operatorType
      * @param num
      */
-    public void changeCommentNum(Integer operatorId, OperatorType operatorType, Integer num) {
+    public void changeCommentNum(Integer tweetId,Integer commentId, OperatorType operatorType, Integer num) {
         switch (operatorType) {
             case TWEET:
                 
                 //todo 这里记得用redis
-                Tweet tweet = tweetMapper.selectById(operatorId);
+                Tweet tweet = tweetMapper.selectById(tweetId);
                 AssertUtil.ifNull(tweet,"不存在该动态");
 
                 tweet.setCommentNum(tweet.getCommentNum() + num);
@@ -65,7 +67,7 @@ public class CommentManager {
                 break;
 
             case COMMENT:
-                Comment comment = commentMapper.selectById(operatorId);
+                Comment comment = commentMapper.selectById(commentId);
                 AssertUtil.ifNull(comment,"不存在该评论");
 
                 comment.setCommentNum(comment.getCommentNum() + num);
@@ -92,21 +94,23 @@ public class CommentManager {
         Integer pTweetId = comment.getPTweetId();
 
 
-        //分两种情况，第一种是父节点是动态
-        //第二种情况是父节点是评论
-        if (pTweetId != null) {
-            LambdaQueryWrapper<Tweet> tweetLambdaQueryWrapper =
-                    new LambdaQueryWrapper<>();
-            tweetLambdaQueryWrapper.eq(Tweet::getId, pTweetId);
-            Tweet tweet = tweetMapper.selectOne(tweetLambdaQueryWrapper);
-            receiveUserId = tweet.getUserId();
-        } else if (pCommentId != null) {
+        //分两种情况，
+        //第一种情况是父节点是评论
+        //第二种是父节点是动态
+        if(pCommentId != null){
             LambdaQueryWrapper<Comment> commentLambdaQueryWrapper =
                     new LambdaQueryWrapper<>();
             commentLambdaQueryWrapper.eq(Comment::getId, pCommentId);
             Comment comment1 = commentMapper.selectOne(commentLambdaQueryWrapper);
             receiveUserId = comment1.getUserId();
-        } else {
+        }
+        else if (pTweetId != null) {
+            LambdaQueryWrapper<Tweet> tweetLambdaQueryWrapper =
+                    new LambdaQueryWrapper<>();
+            tweetLambdaQueryWrapper.eq(Tweet::getId, pTweetId);
+            Tweet tweet = tweetMapper.selectOne(tweetLambdaQueryWrapper);
+            receiveUserId = tweet.getUserId();
+        }  else {
             AssertUtil.failed("pTweetId和pCommentId不能同时为空");
         }
 
@@ -155,6 +159,7 @@ public class CommentManager {
                 .eq(Comment::getPCommentId, commentId);
         return commentMapper.selectList(commentLambdaQueryWrapper);
     }
+
 
 
 
