@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,15 @@ public class LogAspect {
 
     @Around("record()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
+
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(PATH));
+        } catch (Exception e) {
+            reader = new BufferedReader(new FileReader(PATH.replace("yml","yaml")));
+        }
         Yaml yaml = new Yaml();
-        Map<String, Object> load = yaml.load(new BufferedReader(new FileReader(PATH)));
+        Map<String, Object> load = yaml.load(reader);
 
         if (((Map<String, Boolean>) load.get("log")).get("enable") == Boolean.TRUE) {
             long startTime = System.currentTimeMillis();
@@ -52,11 +60,12 @@ public class LogAspect {
             WebLog webLog = WebLog.builder()
                     .startTime(startTime)
                     .spendTime(endTime - startTime)
-                    .parameter(getParameters(method, args))
                     .description(getDescription(method))
-                    .method(request.getMethod())
                     .uri(request.getRequestURI())
                     .url(request.getRequestURL().toString())
+                    .method(request.getMethod())
+                    .ip(getIp())
+                    .parameter(getParameters(method, args))
                     .result(proceed)
                     .build();
             //后续要转为ELK
@@ -130,5 +139,43 @@ public class LogAspect {
         }
         return null;
     }
+
+    private boolean ipNotExist(String ipAddress){
+        return ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress);
+    }
+
+    private String getIp() {
+        HttpServletRequest request = HttpUtil.currentRequest();
+
+        String ipAddress = request.getHeader("x-forwarded-for");
+        if (ipNotExist(ipAddress)) {
+            ipAddress = request.getHeader("Proxy-Client-IP");
+        }
+        if (ipNotExist(ipAddress)) {
+            ipAddress = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ipNotExist(ipAddress)) {
+            ipAddress = request.getRemoteAddr();
+            if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
+                //根据网卡取本机配置的IP
+                InetAddress inet = null;
+                try {
+                    inet = InetAddress.getLocalHost();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                assert inet != null;
+                ipAddress = inet.getHostAddress();
+            }
+        }
+        //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
+        if (ipAddress != null && ipAddress.length() > 15) { //"***.***.***.***".length() = 15
+            if (ipAddress.indexOf(",") > 0) {
+                ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+            }
+        }
+        return ipAddress;
+    }
+
 
 }

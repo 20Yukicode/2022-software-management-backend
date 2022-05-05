@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class HttpUtil {
 
-    public static ServletRequestAttributes getAttributes() {
+    private static ServletRequestAttributes getAttributes() {
         ServletRequestAttributes requestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert requestAttributes != null;

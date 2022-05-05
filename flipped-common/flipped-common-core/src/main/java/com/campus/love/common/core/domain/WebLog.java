@@ -9,16 +9,6 @@ import lombok.EqualsAndHashCode;
 @Builder
 public class WebLog {
     /**
-     * 操作描述
-     */
-    private String description;
-
-    /**
-     * 操作用户
-     */
-    private String username;
-
-    /**
      * 操作时间
      */
     private Long startTime;
@@ -27,6 +17,16 @@ public class WebLog {
      * 消耗时间
      */
     private Long spendTime;
+
+    /**
+     * 操作描述
+     */
+    private String description;
+
+    /**
+     * 操作用户
+     */
+    private String username;
 
     /**
      * 根路径
