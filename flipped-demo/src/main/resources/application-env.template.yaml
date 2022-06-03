@@ -14,3 +14,17 @@ spring:
     username: your name
     password: yours password
     virtual-host: yours virtual-host
+  redis:
+    host: yours host
+    port: 0000
+    database: 0000
+    password: 0000
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8858
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

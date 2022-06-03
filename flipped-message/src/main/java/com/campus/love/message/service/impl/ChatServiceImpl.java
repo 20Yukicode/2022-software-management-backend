@@ -2,6 +2,7 @@ package com.campus.love.message.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.common.core.api.MessageModel;
+import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.core.util.HttpUtil;
 import com.campus.love.common.core.util.SplitUtil;
@@ -70,6 +71,11 @@ public class ChatServiceImpl implements ChatService {
             UserInfoDto data = userSomeInfos.getData();
             builder.userBName(data.getUserName())
                     .userBAvatar(data.getUserAvatar());
+        }).exceptionally(e-> {
+            if(e instanceof ApiException) {
+                throw (ApiException) e;
+            }
+            throw new RuntimeException(e);
         });
 
         CompletableFuture<Void> getChatRecordsAsync = CompletableFuture.runAsync(() -> {
@@ -78,6 +84,11 @@ public class ChatServiceImpl implements ChatService {
                     .sorted(Comparator.comparing(ChatRecord::getCreateTime))
                     .collect(Collectors.toList());
             builder.userChatRecordBoList(collect);
+        }).exceptionally(e-> {
+            if(e instanceof ApiException) {
+                throw (ApiException) e;
+            }
+            throw new RuntimeException(e);
         });
 
         CompletableFuture.allOf(getBInfoAsync, getChatRecordsAsync).join();

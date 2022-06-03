@@ -11,11 +11,9 @@ public enum ResultCode implements IErrorCode {
 
     FORBIDDEN(403, "没有相关权限"),
 
-    FEIGN_FAILED(405,"远程调用失败");
+    FEIGN_FAILED(405,"远程调用失败"),
 
-//    TEST_FAILED(1000,"测试失败"),
-//
-//    NULL(123,"参数为空");
+    EXCEPTION(505, "服务器出了点小差");
 
     private final long code;
 

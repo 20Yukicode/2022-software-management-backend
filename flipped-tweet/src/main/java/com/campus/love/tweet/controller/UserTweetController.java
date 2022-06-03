@@ -13,7 +13,6 @@ import com.campus.love.tweet.service.LikesService;
 import com.campus.love.tweet.service.UserTweetService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,18 +90,17 @@ public class UserTweetController {
 
     @ApiOperation("点赞")
     @PostMapping("/likes/like")
-    public MessageModel<Object> likeAComment(@RequestBody AddLikesVo addLikesVo) {
-
-        likesService.likeComment(addLikesVo);
+    public MessageModel<Object> likeTweetOrComment(@RequestBody AddLikesVo addLikesVo) {
+        //todo 写一个判空工具类，递归读取属性
+        likesService.likeTweetOrComment(addLikesVo);
         return MessageModel.success();
     }
 
     @ApiOperation("取消点赞")
-    @PostMapping("/likes/unlike/id/{id}")
-    public MessageModel<Object> unlikeAComment(@PathVariable Integer id,
-                                               @RequestBody Operator operator) {
+    @PostMapping("/likes/unlike")
+    public MessageModel<Object> unlikeTweetOrComment(@RequestBody AddLikesVo addLikesVo) {
 
-        likesService.unlikeComment(id,operator);
+        likesService.unlikeTweetOrComment(addLikesVo);
         return MessageModel.success();
     }
 

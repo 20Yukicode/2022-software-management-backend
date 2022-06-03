@@ -15,6 +15,7 @@
         <module>flipped-common-core</module>
         <module>flipped-common-feign</module>
         <module>flipped-common-mq</module>
+        <module>flipped-common-cache</module>
     </modules>
 
     <properties>

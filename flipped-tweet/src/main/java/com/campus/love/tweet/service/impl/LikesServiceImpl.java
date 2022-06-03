@@ -1,5 +1,6 @@
 package com.campus.love.tweet.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.common.core.api.MessageModel;
 import com.campus.love.common.core.exception.ApiException;
 import com.campus.love.common.core.util.AssertUtil;
@@ -26,17 +27,17 @@ public class LikesServiceImpl implements LikesService {
 
     private final LikesMapper likesMapper;
 
-    private final SynchronizedByKey<Operator> synchronizedByKey;
-
     private final RabbitTemplate rabbitTemplate;
 
     private final LikesManager likesManager;
 
     private final UserFeignClient userFeignClient;
 
-    public LikesServiceImpl(LikesMapper likesMapper, SynchronizedByKey<Operator> synchronizedByKey, RabbitTemplate rabbitTemplate, LikesManager likesManager, UserFeignClient userFeignClient) {
+    private  static final SynchronizedByKey<Operator> likesSynchronized=new SynchronizedByKey<>();
+
+
+    public LikesServiceImpl(LikesMapper likesMapper,RabbitTemplate rabbitTemplate, LikesManager likesManager, UserFeignClient userFeignClient) {
         this.likesMapper = likesMapper;
-        this.synchronizedByKey = synchronizedByKey;
         this.rabbitTemplate = rabbitTemplate;
         this.likesManager = likesManager;
         this.userFeignClient = userFeignClient;
@@ -45,12 +46,11 @@ public class LikesServiceImpl implements LikesService {
 
     @Transactional(rollbackFor = ApiException.class)
     @Override
-    public void likeComment(AddLikesVo addLikesVo) {
+    public void likeTweetOrComment(AddLikesVo addLikesVo) {
         Operator operator = addLikesVo.getOperator();
         Integer tweetId = operator.getTweetId();
         Integer commentId = operator.getCommentId();
         OperatorType operatorType = operator.getOperatorType();
-
 
         Likes.LikesBuilder builder = Likes.builder();
         switch (operatorType) {
@@ -69,12 +69,12 @@ public class LikesServiceImpl implements LikesService {
                 .userId(addLikesVo.getUserId())
                 .build();
 
+        int insert = likesMapper.insert(build);
+        AssertUtil.failed(() -> insert == 0, "点赞失败");
+
         //这里要加锁,并且是对operatorId，operatorType相同的情况下加锁
         //考虑拓展性，后面可能会加redis
-        synchronizedByKey.exec(operator, () -> {
-            int insert = likesMapper.insert(build);
-            AssertUtil.failed(() -> insert == 0, "点赞失败");
-
+        likesSynchronized.exec(operator, () -> {
             //发送到消息队列
             String exchange = TweetConstant.TWEET_EXCHANGE;
             String key = TweetConstant.LIKES_KEY;
@@ -87,16 +87,22 @@ public class LikesServiceImpl implements LikesService {
 
     @Transactional(rollbackFor = ApiException.class)
     @Override
-    public void unlikeComment(Integer likeId, Operator operator) {
+    public void unlikeTweetOrComment(AddLikesVo addLikesVo) {
+        Operator operator = addLikesVo.getOperator();
         Integer tweetId = operator.getTweetId();
         Integer commentId = operator.getCommentId();
+        Integer userId = addLikesVo.getUserId();
         OperatorType operatorType = operator.getOperatorType();
 
-        synchronizedByKey.exec(operator, () -> {
-            int i = likesMapper.deleteById(likeId);
-            AssertUtil.failed(() -> i == 0, "取消点赞失败");
-            likesManager.changeLikesNum(tweetId, commentId, operatorType, ChangeType.SUB);
-        });
+        LambdaQueryWrapper<Likes> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Likes::getTweetId, tweetId)
+                .eq(commentId != null, Likes::getCommentId, commentId)
+                .eq(Likes::getUserId, userId);
+        int delete = likesMapper.delete(queryWrapper);
+        AssertUtil.failed(() -> delete == 0, "取消点赞失败");
+
+        likesSynchronized.exec(operator,
+                () -> likesManager.changeLikesNum(tweetId, commentId, operatorType, ChangeType.SUB));
     }
 
     @Override

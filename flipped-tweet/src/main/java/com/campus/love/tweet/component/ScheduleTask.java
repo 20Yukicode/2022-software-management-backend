@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 //@Configuration
 public class ScheduleTask {
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(cron = "0 0 1 * * ?")
     private void test() {
         log.info("正在执行test");
     }

@@ -33,17 +33,18 @@
         <docker.host>http://175.24.202.178:23750</docker.host>
         <spring-cloud.version>2020.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
-        <spring-boot-admin.version>2.6.3</spring-boot-admin.version>
+        <spring-boot-admin.version>2.6.7</spring-boot-admin.version>
         <mysql-connector-java.version>8.0.26</mysql-connector-java.version>
         <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <druid.version>1.2.8</druid.version>
         <fastjson.version>1.2.80</fastjson.version>
-        <fastjson2.version>2.0.1</fastjson2.version>
+        <fastjson2.version>2.0.3</fastjson2.version>
         <knife4j.version>3.0.3</knife4j.version>
         <knife4j-micro.version>2.0.9</knife4j-micro.version>
         <sa-token.version>1.29.0</sa-token.version>
         <minio.version>8.2.1</minio.version>
         <aliyun-oss.version>3.10.2</aliyun-oss.version>
+        <hutool.version>5.8.0.M4</hutool.version>
     </properties>
 
     <dependencies>
@@ -146,6 +147,12 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.campus.love</groupId>
+                <artifactId>flipped-common-cache</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!--mysql-->
             <dependency>
                 <groupId>mysql</groupId>
@@ -201,6 +208,13 @@
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun-oss.version}</version>
+            </dependency>
+
+            <!--hutool-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
         </dependencies>

@@ -1,13 +1,14 @@
 package com.campus.love.common.core.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-@Component
+
+//这里不能当成一个单例bean
+//因为对于不同的业务来说，他们不能放在同一个mutexCache里面
 @Slf4j
 public class SynchronizedByKey<T> {
 

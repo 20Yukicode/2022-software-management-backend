@@ -41,13 +41,11 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
 
     private final RabbitTemplate rabbitTemplate;
 
-    private final SynchronizedByKey<Operator> synchronizedByKey;
+    private static final SynchronizedByKey<Operator> commentSynchronized=new SynchronizedByKey<>();
 
-
-    public CommentServiceImpl1(CommentManager commentManager, CommentMapper commentMapper, SynchronizedByKey<Operator> synchronizedByKey, RabbitTemplate rabbitTemplate, UserFeignClient userFeignClient) {
+    public CommentServiceImpl1(CommentManager commentManager, CommentMapper commentMapper, RabbitTemplate rabbitTemplate, UserFeignClient userFeignClient) {
         this.commentManager = commentManager;
         this.commentMapper = commentMapper;
-        this.synchronizedByKey = synchronizedByKey;
         this.rabbitTemplate = rabbitTemplate;
         this.userFeignClient = userFeignClient;
     }
@@ -115,7 +113,7 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
                 AssertUtil.failed("评论类型错误");
         }
 
-        synchronizedByKey.exec(operator, () -> {
+        commentSynchronized.exec(operator, () -> {
             Comment build = builder.build();
             int insert = commentMapper.insert(build);
             AssertUtil.failed(() -> insert == 0, "插入comment表失败");
@@ -139,7 +137,7 @@ public class CommentServiceImpl1 implements CommentService<CommentBo> {
         Integer commentId = operator.getCommentId();
         OperatorType operatorType = operator.getOperatorType();
 
-        synchronizedByKey.exec(operator, () -> {
+        commentSynchronized.exec(operator, () -> {
             int i = commentMapper.deleteById(commentId);
             AssertUtil.failed(() -> i != 1, "删除评论失败");
 

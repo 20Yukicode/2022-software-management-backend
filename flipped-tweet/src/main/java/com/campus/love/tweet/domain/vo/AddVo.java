@@ -9,12 +9,7 @@ import java.util.Date;
 
 @Data
 @NotNull
-public class AddVo{
-
-    @NotNull
-    @ApiModelProperty("评论时间")
-    private Date createTime;
-
+public class AddVo {
     @NotNull
     @ApiModelProperty("用户Id")
     private Integer userId;

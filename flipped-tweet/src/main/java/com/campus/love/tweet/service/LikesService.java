@@ -7,9 +7,9 @@ import com.campus.love.tweet.domain.vo.AddLikesVo;
 
 public interface LikesService {
 
-    void likeComment(AddLikesVo addLikesVo);
+    void likeTweetOrComment(AddLikesVo addLikesVo);
 
-    void unlikeComment(Integer likeId, Operator operator);
+    void unlikeTweetOrComment(AddLikesVo addLikesVo);
 
     LikesDto getLikesDetail(Integer likesId);
 

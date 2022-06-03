@@ -61,6 +61,11 @@
             <groupId>com.campus.love</groupId>
             <artifactId>flipped-common-mq</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.campus.love</groupId>
+            <artifactId>flipped-common-cache</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
