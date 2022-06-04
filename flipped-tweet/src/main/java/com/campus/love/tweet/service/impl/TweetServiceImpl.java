@@ -10,6 +10,7 @@ import com.campus.love.tweet.entity.Comment;
 import com.campus.love.tweet.entity.Tweet;
 import com.campus.love.tweet.manager.CommentManager;
 import com.campus.love.tweet.manager.TweetManager;
+import com.campus.love.tweet.mapper.TweetMapper;
 import com.campus.love.tweet.service.TweetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,15 @@ public class TweetServiceImpl implements TweetService {
 
     private final TweetManager tweetManager;
 
+    private final TweetMapper tweetMapper;
+
     private final CommentManager commentManager;
 
     private final CommentServiceImpl1 commentService;
 
-    public TweetServiceImpl(TweetManager tweetManager, CommentManager commentManager, CommentServiceImpl1 commentService) {
+    public TweetServiceImpl(TweetManager tweetManager, TweetMapper tweetMapper, CommentManager commentManager, CommentServiceImpl1 commentService) {
         this.tweetManager = tweetManager;
+        this.tweetMapper = tweetMapper;
         this.commentManager = commentManager;
         this.commentService = commentService;
     }
@@ -52,6 +56,14 @@ public class TweetServiceImpl implements TweetService {
         tweetVo.setTweetBo(build);
 
         return tweetVo;
+    }
+
+    @Override
+    public List<Integer> recommendTweets(Integer userId) {
+        List<Tweet> tweets = tweetMapper.selectList(null);
+
+        return tweets.parallelStream().filter(tweet -> tweet.getUserId() != userId)
+                .map(Tweet::getId).collect(Collectors.toList());
     }
 
     @Override

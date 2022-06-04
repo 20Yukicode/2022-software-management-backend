@@ -11,6 +11,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = "动态模块")
 @RestController
 @RequestMapping("/tweet")
@@ -24,6 +26,15 @@ public class TweetController {
     public TweetController(TweetService tweetService, CommentService<CommentBo> commentService) {
         this.tweetService = tweetService;
         this.commentService = commentService;
+    }
+
+    @ApiOperation("推荐动态的list")
+    @GetMapping("/recommend/userId/{userId}")
+    public MessageModel<List<Integer>> recommendTweetList(@PathVariable Integer userId){
+
+        List<Integer> integers = tweetService.recommendTweets(userId);
+
+        return MessageModel.success(integers);
     }
 
     @ApiOperation("展示一条动态及下面的所有评论(只有直接)")

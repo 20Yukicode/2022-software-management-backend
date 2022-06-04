@@ -5,8 +5,11 @@ import com.campus.love.tweet.enums.Order;
 import com.campus.love.tweet.domain.vo.CommentTreeNodeVo;
 import com.campus.love.tweet.domain.vo.TweetVo;
 
+import java.util.List;
+
 public interface TweetService {
 
+    List<Integer> recommendTweets(Integer userId);
     /**
      * 得到动态内容和本动态的所有直接评论
      *
