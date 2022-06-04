@@ -4,7 +4,7 @@ spring:
       server-addr: @nacos.address@
       discovery:
         namespace: @nacos.namespace@
-        cluster-name: SH
+        cluster-name: YL
       config:
         namespace: @nacos.namespace@
         file-extension: yaml

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.love.common.core.util.AssertUtil;
 import com.campus.love.common.core.util.HttpUtil;
 import com.campus.love.common.feign.module.user.UserFeignClient;
+import com.campus.love.common.feign.module.user.dto.UserInfoDto;
 import com.campus.love.common.mq.domain.dto.NoticeMqDto;
 import com.campus.love.common.mq.enums.MessageType;
 import com.campus.love.common.mq.enums.ReadState;
@@ -114,18 +115,22 @@ public class CommentManager {
             AssertUtil.failed("pTweetId和pCommentId不能同时为空");
         }
 
-        HttpUtil.setInheritable();
-        CompletableFuture<Void> sendFuture = CompletableFuture
-                .supplyAsync(() -> userFeignClient.queryUserInfos(comment.getUserId()))
-                .thenAccept((data) -> builder.sendUserInfo(data.getData()));
 
+//        CompletableFuture<Void> sendFuture = CompletableFuture
+//                .supplyAsync(() -> userFeignClient.queryUserInfos(comment.getUserId()))
+//                .thenAccept((data) -> builder.sendUserInfo(data.getData()));
 
-        Integer finalReceiveUserId = receiveUserId;
-        CompletableFuture<Void> receiveFuture = CompletableFuture
-                .supplyAsync(() -> userFeignClient.queryUserInfos(finalReceiveUserId))
-                .thenAccept((data) -> builder.receiveUserInfo(data.getData()));
+        UserInfoDto data = userFeignClient.queryUserInfos(comment.getUserId()).getData();
+        builder.sendUserInfo(data);
 
-        CompletableFuture.allOf(sendFuture, receiveFuture).join();
+        UserInfoDto data1 = userFeignClient.queryUserInfos(receiveUserId).getData();
+        builder.receiveUserInfo(data1);
+//        Integer finalReceiveUserId = receiveUserId;
+//        CompletableFuture<Void> receiveFuture = CompletableFuture
+//                .supplyAsync(() -> userFeignClient.queryUserInfos(finalReceiveUserId))
+//                .thenAccept((data) -> builder.receiveUserInfo(data.getData()));
+//
+//        CompletableFuture.allOf(sendFuture, receiveFuture).join();
 
         return builder.comment(comment).build();
     }
