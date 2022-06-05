@@ -7,4 +7,6 @@ import org.springframework.stereotype.Service;
 public interface CriteriaService {
 
     int insertOrUpdateCriteria(Criteria criteria);
+
+    Criteria getCriteria(Integer id);
 }

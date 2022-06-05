@@ -8,6 +8,7 @@ import com.campus.love.user.dto.UserDto;
 import com.campus.love.user.entity.User;
 import com.campus.love.user.service.UserService;
 import io.swagger.models.auth.In;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public MessageModel register(@RequestBody UserDto userDto){
+    public MessageModel register(@RequestBody @Validated UserDto userDto){
         if (StringUtils.isEmpty(userDto.getOpenPid())) {
             return MessageModel.failed("openPid错误");
         }
@@ -77,8 +78,7 @@ public class UserController {
             else if(user.getLoginState() == 0) {
 
                 return MessageModel.success("用户未登录", user.getId());
-            }
-            else {
+            } else {
                 StpUtil.login(user.getId());
                 return MessageModel.success("用户已登录", user.getId());
             }
@@ -153,6 +153,7 @@ public class UserController {
                                               @RequestParam("nums") Integer nums) {
 
         List<String> fileUrlList = userService.deleteAlbum(id, nums);
-        return fileUrlList == null ? MessageModel.failed("删除失败") : MessageModel.success("删除成功",fileUrlList);
+        return fileUrlList == null ? MessageModel.failed("删除失败")
+                : MessageModel.success("删除成功",fileUrlList);
     }
 }

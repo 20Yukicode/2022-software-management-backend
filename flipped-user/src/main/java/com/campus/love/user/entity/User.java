@@ -41,7 +41,7 @@ public class User extends BaseEntity {
 
     /**
      * 0-单身
-1-恋爱
+ 1-恋爱
      */
     private Integer state;
 

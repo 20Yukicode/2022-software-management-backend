@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.love.user.mapper.SubscribedMapper">
+
+    <resultMap id="BaseResultMap" type="com.campus.love.user.entity.Subscribed">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="firstUserId" column="first_user_id" jdbcType="INTEGER"/>
+            <result property="secondUserId" column="second_user_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,first_user_id,
+        second_user_id
+    </sql>
+</mapper>

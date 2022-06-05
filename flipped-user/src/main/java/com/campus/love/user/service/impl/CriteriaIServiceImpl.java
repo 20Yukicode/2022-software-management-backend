@@ -19,6 +19,11 @@ public class CriteriaIServiceImpl implements CriteriaService {
     }
 
 
+    /**
+     * 插入或更新择偶标准
+     * @param criteria
+     * @return
+     */
     @Override
     public int insertOrUpdateCriteria(Criteria criteria) {
         //检查userId的合法性
@@ -29,4 +34,15 @@ public class CriteriaIServiceImpl implements CriteriaService {
         //检查是否已经存在Criteria
         return criteriaMapper.updateById(criteria) == 0 ? criteriaMapper.insert(criteria) : 0;
     }
+
+    /**
+     * 查询某一个用户的择偶标准
+     * @param id 用户id
+     * @return Criteria
+     */
+    @Override
+    public Criteria getCriteria(Integer id) {
+        return criteriaMapper.selectById(id);
+    };
+
 }

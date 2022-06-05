@@ -5,8 +5,6 @@ import com.campus.love.common.core.api.ResultCode;
 import com.campus.love.common.core.handle.BaseInterceptorHandle;
 import com.campus.love.common.core.util.InterceptorUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

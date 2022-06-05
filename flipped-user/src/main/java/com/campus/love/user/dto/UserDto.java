@@ -1,8 +1,9 @@
 package com.campus.love.user.dto;
 
-import io.swagger.models.auth.In;
 import lombok.Builder;
 import lombok.Data;
+
+import javax.validation.constraints.NotNull;
 
 @Builder
 @Data
@@ -18,16 +19,19 @@ public class UserDto {
     /**
      * 用户昵称
      */
+    @NotNull
     private String nickName;
 
     /**
      * 头像Url
      */
+    @NotNull
     private String avatarUrl;
 
     /**
      * 用户身份唯一标识符
      */
+    @NotNull
     private String openPid;
 
 
